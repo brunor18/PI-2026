@@ -1,0 +1,42 @@
+# Build
+bin/
+obj/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Logs
+*.log
+
+# Entity Framework
+Migrations/*Snapshot.cs
+
+# App settings sensíveis
+appsettings.Development.json
+
+
+
+*.tmp
+*.temp
+
+Thumbs.db
+Desktop.ini
+
+
+
+*.nupkg
+packages/
+
+
+coverage/
+
+
+*.pfx
+
+# dotenv
+.env
+.env.local
