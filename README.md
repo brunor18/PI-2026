@@ -25,16 +25,30 @@ Projeto PI 2026: promederi
     npm i
 ```
 
-**Passo 4: Iniciar servidor backend**
+**Passo 4: Iniciar servidor do banco de dados**
+
+### INICIE O SERVIDOR COM DOCKER OU XAMPP
+
+
+**Passo 4: Aplicar migração do banco de dados**
+
+ ```bash
+    dotnet ef database update
+```
+
+**Passo 5: Iniciar servidor backend**
  ```bash
     cd Promederi/backend
     dotnet watch
 ```
 
-**Passo 5: Iniciar servidor frontend**
+**Passo 6: Iniciar servidor frontend**
  ```bash
     npm run dev 
 ```
+
+
+
 
 ##  Configuração do docker
 Iniciar composer do docker:
