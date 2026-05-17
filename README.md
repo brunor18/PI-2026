@@ -35,3 +35,26 @@ Projeto PI 2026: promederi
  ```bash
     npm run dev 
 ```
+
+##  Configuração do docker
+Iniciar composer do docker:
+
+ ```bash
+    docker compose up -d
+```
+
+Desligar composer
+ ```bash
+    docker compose down -v 
+``` 
+
+## appsettings.json:
+<b>IMPORTANTE</b>: se quiser usar o xampp, deixe o campo password vazio
+
+```json
+    {
+        "ConnectionStrings": {
+            "DefaultConnection": "server=localhost;port=3306;database=promederiDB;user=root;password=12345"
+        }
+    }
+``` 
