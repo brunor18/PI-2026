@@ -14,6 +14,7 @@
 
         public string numeroTelefone { get; set; }
 
-        public List<Medicamento> medicamentos { get; set; }
+        public ICollection<Medicamento> Medicamentos { get; set; }
+        = new List<Medicamento>();
     }
 }

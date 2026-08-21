@@ -4,6 +4,8 @@
     {
         public int Id { get; set; }
 
+        public int UsuarioId { get; set; }
+
         public string nomeMedicamento { get; set; } = string.Empty;
 
         public string dosagem { get; set; } = string.Empty;
@@ -13,5 +15,7 @@
         public DateTime InicioTratamento { get; set; }
 
         public DateTime FimTratamento { get; set; }
+
+        public Usuario Usuario { get; set; } = null!;
     }
 }

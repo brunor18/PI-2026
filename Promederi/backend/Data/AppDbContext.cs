@@ -11,6 +11,17 @@ namespace backend.Data
 
         }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Medicamento>()  
+                .HasOne(m => m.Usuario)
+                .WithMany(u => u.Medicamentos)
+                .HasForeignKey(m => m.UsuarioId)  // um usuario pode possuir varios medicamentos, mas cada medicamento pertence a apenas um usuario
+                .OnDelete(DeleteBehavior.Cascade);
+        }
+
 
 
         public DbSet<Usuario> Usuarios { get; set; } // transforma a classe Usuario em uma tabela do banco de dados

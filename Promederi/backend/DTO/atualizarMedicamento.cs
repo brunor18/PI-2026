@@ -1,14 +1,15 @@
-namespace backend.DTO;
-
-public class atualizarMedicamento
+namespace backend.DTO
 {
-    public string nomeMedicamento { get; set; } = string.Empty;
+    public class atualizarMedicamento
+    {
+        public string? nomeMedicamento { get; set; }
 
-    public string dosagem { get; set; } = string.Empty;
+        public string? dosagem { get; set; }
 
-    public string frequencia { get; set; } = string.Empty;
+        public string? frequencia { get; set; }
 
-    public DateTime InicioTratamento { get; set; }
+        public DateTime? InicioTratamento { get; set; }
 
-    public DateTime FimTratamento { get; set; }
+        public DateTime? FimTratamento { get; set; }
+    }
 }
