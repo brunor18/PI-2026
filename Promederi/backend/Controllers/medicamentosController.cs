@@ -23,6 +23,14 @@ public class MedicamentosController : ControllerBase
     {
         var medicamentos = await _context.Medicamentos.ToListAsync();
 
+        if(medicamentos.Count == 0)
+        {
+            return NotFound(new
+            {
+                mensagem = "Não há medicamentos cadastrados ainda."
+            });
+        }
+
         return Ok(medicamentos);
     }
 
