@@ -24,8 +24,8 @@ namespace backend.Data
 
 
 
-        public DbSet<Usuario> Usuarios { get; set; } // transforma a classe Usuario em uma tabela do banco de dados
-        public DbSet<Medicamento> Medicamentos { get; set; } // transforma a classe Medicamentos em uma tabela do banco de dados
+        public DbSet<Usuario> usuarios { get; set; } // transforma a classe Usuario em uma tabela do banco de dados
+        public DbSet<Medicamento> medicamentos { get; set; } // transforma a classe Medicamentos em uma tabela do banco de dados
 
     }
 }

@@ -7,7 +7,7 @@ using backend.Models;
 namespace Promederi.Controllers;
 
 [ApiController]
-[Route("api/Usuarios/{usuarioId}/[controller]")]
+[Route("api/usuarios/{usuarioId}/medicamentos")]
 public class MedicamentosController : ControllerBase
 {
     private readonly AppDbContext _context;
@@ -17,11 +17,11 @@ public class MedicamentosController : ControllerBase
         _context = context;
     }
 
-    // GET: api/Usuarios/1/Medicamentos/
+    // GET: api/usuarios/1/medicamentos/
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Medicamento>>> GetMedicamentos(int usuarioId)
     {
-        var medicamentos = await _context.Medicamentos
+        var medicamentos = await _context.medicamentos
         .Where(m => m.UsuarioId == usuarioId)
         .ToListAsync();
 
@@ -37,11 +37,11 @@ public class MedicamentosController : ControllerBase
         return Ok(medicamentos);
     }
 
-    // GET: api/Usuarios/1/Medicamentos/1
+    // GET: api/usuarios/1/medicamentos/1
     [HttpGet("{id}")]
     public async Task<ActionResult<Medicamento>> GetMedicamentoPorID(int usuarioId, int id)
     {
-        var medicamento = await _context.Medicamentos.FirstOrDefaultAsync(m =>
+        var medicamento = await _context.medicamentos.FirstOrDefaultAsync(m =>
                 m.Id == id &&
                 m.UsuarioId == usuarioId
             );
@@ -57,14 +57,14 @@ public class MedicamentosController : ControllerBase
         return Ok(medicamento);
     }
 
-    // POST: api/Usuarios/1/Medicamentos
+    // POST: api/usuarios/1/medicamentos
     [HttpPost]
     public async Task<ActionResult<Medicamento>> CriarMedicamento(
         int usuarioId,
         criarMedicamento dto)
     {
 
-        var usuarioExiste = await _context.Usuarios
+        var usuarioExiste = await _context.usuarios
         .AnyAsync(u => u.Id == usuarioId);
 
 
@@ -94,7 +94,7 @@ public class MedicamentosController : ControllerBase
             FimTratamento = dto.FimTratamento
         };
 
-        _context.Medicamentos.Add(medicamento);
+        _context.medicamentos.Add(medicamento);
 
         await _context.SaveChangesAsync();
 
@@ -105,14 +105,14 @@ public class MedicamentosController : ControllerBase
         );
     }
 
-    // PATCH: api/Usuarios/1/Medicamentos/1
+    // PATCH: api/usuarios/1/medicamentos/1
     [HttpPatch("{id}")]
     public async Task<IActionResult> EditarMedicamento(
         int usuarioId,
         int id,
         atualizarMedicamento dto)
     {
-        var medicamento = await _context.Medicamentos
+        var medicamento = await _context.medicamentos
             .FirstOrDefaultAsync(m =>
                 m.Id == id &&
                 m.UsuarioId == usuarioId);
@@ -163,13 +163,13 @@ public class MedicamentosController : ControllerBase
         return Ok(medicamento);
     }
 
-    // DELETE: api/Usuarios/1/Medicamentos/1
+    // DELETE: api/usuarios/1/medicamentos/1
     [HttpDelete("{id}")]
     public async Task<IActionResult> RemoverMedicamento(
         int usuarioId,
         int id)
     {
-        var medicamento = await _context.Medicamentos.FirstOrDefaultAsync(m =>
+        var medicamento = await _context.medicamentos.FirstOrDefaultAsync(m =>
                 m.Id == id &&
                 m.UsuarioId == usuarioId);
 
@@ -181,7 +181,7 @@ public class MedicamentosController : ControllerBase
             });
         }
 
-        _context.Medicamentos.Remove(medicamento);
+        _context.medicamentos.Remove(medicamento);
 
         await _context.SaveChangesAsync();
 

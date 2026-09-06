@@ -10,9 +10,11 @@
 
         public string senha { get; set; }
 
-        public int PIN { get; set; }
+        public string PIN { get; set; }
 
         public string numeroTelefone { get; set; }
+
+        public DateTime? UltimaAutenticacaoSenha { get; set; }
 
         public ICollection<Medicamento> Medicamentos { get; set; }
         = new List<Medicamento>();

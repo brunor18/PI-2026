@@ -12,10 +12,13 @@ namespace backend.DTO
         public string email { get; set; } = string.Empty;
 
         [Required]
+        [MinLength(6)]
         public string senha { get; set; } = string.Empty;
 
         [Required]
-        public int PIN { get; set; }
+        [RegularExpression(@"^\d{4,6}$",
+            ErrorMessage = "O PIN deve possuir entre 4 e 6 dígitos.")]
+        public string PIN { get; set; }
 
         [Required]
         public string numeroTelefone { get; set; } = string.Empty;
