@@ -3,9 +3,13 @@ using Microsoft.EntityFrameworkCore;
 using backend.Data;
 using backend.DTO;
 using backend.Models;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+
 
 namespace Promederi.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/usuarios/{usuarioId}/medicamentos")]
 public class MedicamentosController : ControllerBase
@@ -17,10 +21,52 @@ public class MedicamentosController : ControllerBase
         _context = context;
     }
 
+    private int? ObterUsuarioLogadoId()
+    {
+        var usuarioId = User.FindFirst(
+            ClaimTypes.NameIdentifier
+        )?.Value;
+
+        if (!int.TryParse(usuarioId, out var id))
+        {
+            return null;
+        }
+
+        return id;
+    }
+
+    private bool UsuarioTemAcesso(int usuarioId)
+    {
+        var usuarioLogadoId = ObterUsuarioLogadoId();
+
+        return usuarioLogadoId.HasValue &&
+               usuarioLogadoId.Value == usuarioId;
+    }
+
+    private bool TokenEhDeAcesso()
+    {
+        return User.FindFirst("token_type")?.Value == "access";
+    }
+
+
+
     // GET: api/usuarios/1/medicamentos/
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Medicamento>>> GetMedicamentos(int usuarioId)
     {
+
+        if (!TokenEhDeAcesso())
+        {
+            return Forbid();
+        }
+
+
+        if (!UsuarioTemAcesso(usuarioId))
+        {
+            return Forbid();
+        }
+
+
         var medicamentos = await _context.medicamentos
         .Where(m => m.UsuarioId == usuarioId)
         .ToListAsync();
@@ -41,6 +87,19 @@ public class MedicamentosController : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<Medicamento>> GetMedicamentoPorID(int usuarioId, int id)
     {
+
+        if (!TokenEhDeAcesso())
+        {
+            return Forbid();
+        }
+
+
+        if (!UsuarioTemAcesso(usuarioId))
+        {
+            return Forbid();
+        }
+
+
         var medicamento = await _context.medicamentos.FirstOrDefaultAsync(m =>
                 m.Id == id &&
                 m.UsuarioId == usuarioId
@@ -63,6 +122,16 @@ public class MedicamentosController : ControllerBase
         int usuarioId,
         criarMedicamento dto)
     {
+
+        if (!TokenEhDeAcesso())
+        {
+            return Forbid();
+        }
+
+        if (!UsuarioTemAcesso(usuarioId))
+        {
+            return Forbid();
+        }
 
         var usuarioExiste = await _context.usuarios
         .AnyAsync(u => u.Id == usuarioId);
@@ -112,6 +181,19 @@ public class MedicamentosController : ControllerBase
         int id,
         atualizarMedicamento dto)
     {
+
+        if (!TokenEhDeAcesso())
+        {
+            return Forbid();
+        }
+
+
+        if (!UsuarioTemAcesso(usuarioId))
+        {
+            return Forbid();
+        }
+
+
         var medicamento = await _context.medicamentos
             .FirstOrDefaultAsync(m =>
                 m.Id == id &&
@@ -169,6 +251,19 @@ public class MedicamentosController : ControllerBase
         int usuarioId,
         int id)
     {
+
+        if (!TokenEhDeAcesso())
+        {
+            return Forbid();
+        }
+
+
+        if (!UsuarioTemAcesso(usuarioId))
+        {
+            return Forbid();
+        }
+
+
         var medicamento = await _context.medicamentos.FirstOrDefaultAsync(m =>
                 m.Id == id &&
                 m.UsuarioId == usuarioId);
