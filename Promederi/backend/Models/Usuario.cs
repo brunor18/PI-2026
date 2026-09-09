@@ -18,5 +18,7 @@
 
         public ICollection<Medicamento> Medicamentos { get; set; }
         = new List<Medicamento>();
+
+        public DateTime createdAt { get; set; } = DateTime.UtcNow;
     }
 }

@@ -159,6 +159,7 @@ public class MedicamentosController : ControllerBase
             nomeMedicamento = dto.nomeMedicamento,
             dosagem = dto.dosagem,
             frequencia = dto.frequencia,
+            descricao = dto.descricao,
             InicioTratamento = dto.InicioTratamento,
             FimTratamento = dto.FimTratamento
         };
@@ -220,6 +221,11 @@ public class MedicamentosController : ControllerBase
         if (dto.frequencia != null)
         {
             medicamento.frequencia = dto.frequencia;
+        }
+
+        if (dto.descricao != null)
+        {
+            medicamento.descricao = dto.descricao;
         }
 
         if (dto.InicioTratamento.HasValue)

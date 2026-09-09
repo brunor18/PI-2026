@@ -12,10 +12,14 @@
 
         public string frequencia { get; set; } = string.Empty;
 
+        public string? descricao { get; set; }
+
         public DateTime InicioTratamento { get; set; }
 
         public DateTime FimTratamento { get; set; }
 
         public Usuario Usuario { get; set; } = null!;
+
+        public DateTime createdAt { get; set; } = DateTime.UtcNow;
     }
 }

@@ -8,6 +8,8 @@ public class criarMedicamento
 
     public string frequencia { get; set; } = string.Empty;
 
+    public string? descricao { get; set; }
+
     public DateTime InicioTratamento { get; set; }
 
     public DateTime FimTratamento { get; set; }
