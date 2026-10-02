@@ -1,0 +1,240 @@
+{
+  "info": {
+    "name": "Promederi - RF-05 - Campos clínicos",
+    "description": "Execute na ordem: criar, listar, consultar, atualizar e excluir. Configure baseUrl, usuarioId e accessToken com um JWT de acesso do mesmo usuário. campoId é preenchido automaticamente após a criação. A exclusão remove o campo criado nesta execução. A API e o MySQL devem estar disponíveis, com a migration aplicada.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_postman_id": "15841718-e33f-4d25-9b18-c6821575dcb7"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{accessToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://localhost:7053",
+      "type": "string"
+    },
+    {
+      "key": "usuarioId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "accessToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "campoId",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "01 - Criar campo clínico",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nome\": \"Histórico familiar\",\n  \"descricao\": \"Informações clínicas relevantes da família\",\n  \"valor\": \"Pai com hipertensão\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/usuarios/{{usuarioId}}/campos-clinicos",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "usuarios",
+            "{{usuarioId}}",
+            "campos-clinicos"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status 201\", function () { pm.response.to.have.status(201); });",
+              "if (pm.response.code === 201) {",
+              "  const campo = pm.response.json();",
+              "  pm.test(\"Campo criado com nome e valor\", function () { pm.expect(campo.id).to.be.a(\"number\"); pm.expect(campo.nome).to.eql(\"Histórico familiar\"); pm.expect(campo.valor).to.eql(\"Pai com hipertensão\"); });",
+              "  pm.collectionVariables.set(\"campoId\", String(campo.id));",
+              "  pm.test(\"Cabeçalho Location presente\", function () { pm.expect(pm.response.headers.get(\"Location\")).to.be.a(\"string\"); });",
+              "}"
+            ]
+          }
+        }
+      ],
+      "response": []
+    },
+    {
+      "name": "02 - Listar campos clínicos",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/usuarios/{{usuarioId}}/campos-clinicos",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "usuarios",
+            "{{usuarioId}}",
+            "campos-clinicos"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status 200\", function () { pm.response.to.have.status(200); });",
+              "if (pm.response.code === 200) {",
+              "  pm.test(\"Lista contém o campo criado\", function () { const campos = pm.response.json(); pm.expect(campos).to.be.an(\"array\"); pm.expect(campos.some(c => String(c.id) === String(pm.variables.get(\"campoId\")))).to.eql(true); });",
+              "}"
+            ]
+          }
+        }
+      ],
+      "response": []
+    },
+    {
+      "name": "03 - Consultar campo clínico",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/usuarios/{{usuarioId}}/campos-clinicos/{{campoId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "usuarios",
+            "{{usuarioId}}",
+            "campos-clinicos",
+            "{{campoId}}"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status 200\", function () { pm.response.to.have.status(200); });",
+              "if (pm.response.code === 200) { pm.test(\"Identificador corresponde ao campo criado\", function () { pm.expect(String(pm.response.json().id)).to.eql(String(pm.variables.get(\"campoId\"))); }); }"
+            ]
+          }
+        }
+      ],
+      "response": []
+    },
+    {
+      "name": "04 - Atualizar campo clínico",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nome\": \"Histórico familiar atualizado\",\n  \"descricao\": null,\n  \"valor\": \"Pai com hipertensão; mãe com diabetes\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/usuarios/{{usuarioId}}/campos-clinicos/{{campoId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "usuarios",
+            "{{usuarioId}}",
+            "campos-clinicos",
+            "{{campoId}}"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status 200\", function () { pm.response.to.have.status(200); });",
+              "if (pm.response.code === 200) { pm.test(\"Alterações retornadas\", function () { const campo = pm.response.json(); pm.expect(campo.nome).to.eql(\"Histórico familiar atualizado\"); pm.expect(campo.descricao).to.eql(null); pm.expect(campo.valor).to.eql(\"Pai com hipertensão; mãe com diabetes\"); }); }"
+            ]
+          }
+        }
+      ],
+      "response": []
+    },
+    {
+      "name": "05 - Excluir campo clínico",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/usuarios/{{usuarioId}}/campos-clinicos/{{campoId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "usuarios",
+            "{{usuarioId}}",
+            "campos-clinicos",
+            "{{campoId}}"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status 204\", function () { pm.response.to.have.status(204); });",
+              "pm.test(\"Resposta sem conteúdo\", function () { pm.expect(pm.response.text()).to.eql(\"\"); });"
+            ]
+          }
+        }
+      ],
+      "response": []
+    }
+  ]
+}

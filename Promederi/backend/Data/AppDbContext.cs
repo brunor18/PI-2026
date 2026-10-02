@@ -15,6 +15,17 @@ namespace backend.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<CampoClinico>(entity =>
+            {
+                entity.Property(c => c.Nome).HasMaxLength(100).IsRequired();
+                entity.Property(c => c.Descricao).HasMaxLength(500);
+                entity.Property(c => c.Valor).HasMaxLength(5000);
+                entity.HasOne(c => c.Usuario)
+                    .WithMany()
+                    .HasForeignKey(c => c.UsuarioId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
+
             modelBuilder.Entity<Medicamento>()  
                 .HasOne(m => m.Usuario)
                 .WithMany(u => u.Medicamentos)
@@ -25,6 +36,7 @@ namespace backend.Data
 
 
         public DbSet<Usuario> usuarios { get; set; } // transforma a classe Usuario em uma tabela do banco de dados
+        public DbSet<CampoClinico> camposClinicos { get; set; }
         public DbSet<Medicamento> medicamentos { get; set; } // transforma a classe Medicamentos em uma tabela do banco de dados
 
     }
