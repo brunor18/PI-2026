@@ -1,138 +1,60 @@
+import React from "react";
+const _jsxFileName = "";import { Link, useLocation } from "react-router-dom";
+import { BookOpenText, Bot, HeartPulse, Menu, Users, X } from "lucide-react";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { BrandLogo } from "./BrandLogo";
+import { Button } from "./ui/button";
 
-export default function Navbar() {
-  const [menuOpen, setMenuOpen] = useState(false);
+const links = [
+  { to: "/", label: "Visão geral", icon: HeartPulse },
+  { to: "/CuidadoresClient", label: "Cuidadores", icon: Users },
+  { to: "/AnotacoesClient", label: "Anotações", icon: BookOpenText },
+  { to: "/IAClient", label: "IA de saúde", icon: Bot },
+] ;
+
+export function NavBarClient() {
+  const [open, setOpen] = useState(false);
+  const location = useLocation();
 
   return (
-    <>
-      <nav className="relative hidden h-[84px] w-full items-center bg-[#516FA4] px-8 shadow-lg md:flex">
-        
-        <Link to="/" className="flex shrink-0 items-center gap-3">
-          <div className="h-10 w-10 rounded-full bg-[#D9D9D9]" />
-          <span className="text-[18px] font-semibold text-white">
-            Promederi
-          </span>
-        </Link>
+    React.createElement('header', { className: "sticky top-0 z-50 border-b border-border bg-card/95 backdrop-blur-md"      , __self: this, __source: {fileName: _jsxFileName, lineNumber: 18}}
+      , React.createElement('div', { className: "mx-auto flex h-20 max-w-7xl items-center justify-between px-5 lg:px-8"       , __self: this, __source: {fileName: _jsxFileName, lineNumber: 19}}
+        , React.createElement('div', { className: "flex items-center gap-10"  , __self: this, __source: {fileName: _jsxFileName, lineNumber: 20}}
+          , React.createElement(Link, { to: "/", 'aria-label': "Promedéri — início"  , __self: this, __source: {fileName: _jsxFileName, lineNumber: 21}}, React.createElement(BrandLogo, {__self: this, __source: {fileName: _jsxFileName, lineNumber: 21}} ))
+          , React.createElement('nav', { 'aria-label': "Navegação do cliente"  , className: "hidden items-center gap-7 lg:flex"   , __self: this, __source: {fileName: _jsxFileName, lineNumber: 22}}
+            , links.map(({ to, label, icon: Icon }) => (
+              React.createElement(Link, {
+                key: to,
+                to: to,
+                className: `flex min-h-11 items-center gap-2 border-b-2 px-1 text-sm font-medium transition-colors hover:text-primary ${location.pathname === to ? "text-primary border-emergency" : "text-muted-foreground border-transparent"}`         , __self: this, __source: {fileName: _jsxFileName, lineNumber: 24}}
 
-        {/* LINKS */}
-        <div className="absolute left-1/2 flex -translate-x-1/2 items-center gap-10">
-          <Link
-            to="/"
-            className="whitespace-nowrap text-[16px] font-semibold text-white/90 transition hover:text-white"
-          >
-            Página inicial
-          </Link>
-          <Link
-            to="/cuidadoresClient"
-            className="whitespace-nowrap text-[16px] font-semibold text-white/90 transition hover:text-white"
-          >
-            Buscar cuidadores
-          </Link>
-          <Link
-            to="/anotacaoClient"
-            className="whitespace-nowrap text-[16px] font-semibold text-white/90 transition hover:text-white"
-          >
-            Anotação
-          </Link>
-          <Link
-            to="/IAClient"
-            className="whitespace-nowrap text-[16px] font-semibold text-white/90 transition hover:text-white"
-          >
-            Funções de IA
-          </Link>
-        </div>
+                , React.createElement(Icon, { 'aria-hidden': "true", className: "size-4", __self: this, __source: {fileName: _jsxFileName, lineNumber: 32}} ), label
+              )
+            ))
+          )
+        )
+        , React.createElement('div', { className: "hidden items-center gap-3 sm:flex"   , __self: this, __source: {fileName: _jsxFileName, lineNumber: 37}}
+          , React.createElement(Link, { to: "/HomeCaregiver", className: "rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-accent hover:text-primary"       , __self: this, __source: {fileName: _jsxFileName, lineNumber: 38}}, "Área do cuidador"
 
-        {/* USUÁRIO */}
-        <div className="ml-auto">
-          <Link to="/perfilClient" className="text-[16px] font-semibold text-white hover:underline">
-            Nome
-          </Link>
-        </div>
-      </nav>
-
-      {/* MOBILE */}
-      <header className="flex h-[64px] w-full items-center justify-between bg-[#516FA4] px-5 shadow-lg md:hidden">
-        <Link to="/" className="text-[17px] font-semibold text-white">
-          Promederi
-        </Link>
-
-        {/* Hambúrguer */}
-        <button
-          onClick={() => setMenuOpen(true)}
-          className="flex flex-col gap-[5px]"
-          aria-label="Abrir menu"
-        >
-          <span className="h-[2px] w-7 bg-white" />
-          <span className="h-[2px] w-7 bg-white" />
-          <span className="h-[2px] w-7 bg-white" />
-        </button>
-      </header>
-
-      {/* OVERLAY */}
-      {menuOpen && (
-        <div
-          onClick={() => setMenuOpen(false)}
-          className="fixed inset-0 z-40 bg-black/40 md:hidden"
-        />
-      )}
-
-      {/* SIDEBAR MOBILE / TABLET */}
-      <aside
-        className={`fixed left-0 top-0 z-50 h-screen w-[150px] bg-[#516FA4] shadow-xl transition-transform duration-300 md:hidden ${
-          menuOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
-      >
-        {/* Botão fechar */}
-        <div className="flex justify-end border-b border-[#314362] px-3 py-4">
-          <button
-            onClick={() => setMenuOpen(false)}
-            className="text-2xl leading-none text-white"
-            aria-label="Fechar menu"
-          >
-            ×
-          </button>
-        </div>
-
-        {/* MENU MOBILE */}
-        <div className="flex flex-col">
-          <Link
-            to="/"
-            onClick={() => setMenuOpen(false)}
-            className="border-b border-[#6B87B5] px-2 py-3 text-[15px] text-white transition hover:bg-[#466394]"
-          >
-            Página inicial
-          </Link>
-          <Link
-            to="/cuidadoresClient"
-            onClick={() => setMenuOpen(false)}
-            className="border-b border-[#6B87B5] px-2 py-3 text-[15px] text-white transition hover:bg-[#466394]"
-          >
-            Buscar cuidadores
-          </Link>
-          <Link
-            to="/anotacaoClient"
-            onClick={() => setMenuOpen(false)}
-            className="border-b border-[#6B87B5] px-2 py-3 text-[15px] text-white transition hover:bg-[#466394]"
-          >
-            Anotação
-          </Link>
-          <Link
-            to="/IAClient"
-            onClick={() => setMenuOpen(false)}
-            className="border-b border-[#6B87B5] px-2 py-3 text-[15px] text-white transition hover:bg-[#466394]"
-          >
-            Funções de IA
-          </Link>
-          <Link
-            to="/login"
-            onClick={() => setMenuOpen(false)}
-            className="px-2 py-3 text-[15px] text-white transition hover:bg-[#466394]"
-          >
-            Sair
-          </Link>
-        </div>
-      </aside>
-    </>
+          )
+          , React.createElement(Link, { to: "/login", className: "rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground hover:bg-primary/90"       , __self: this, __source: {fileName: _jsxFileName, lineNumber: 41}}, "Sair")
+        )
+        , React.createElement(Button, { variant: "ghost", className: "size-11 px-0 lg:hidden"  , onClick: () => setOpen((value) => !value), 'aria-label': open ? "Fechar menu" : "Abrir menu", __self: this, __source: {fileName: _jsxFileName, lineNumber: 43}}
+          , open ? React.createElement(X, { className: "size-6", __self: this, __source: {fileName: _jsxFileName, lineNumber: 44}} ) : React.createElement(Menu, { className: "size-6", __self: this, __source: {fileName: _jsxFileName, lineNumber: 44}} )
+        )
+      )
+      , open && (
+        React.createElement('nav', { 'aria-label': "Navegação móvel" , className: "border-t border-border bg-card p-4 lg:hidden"    , __self: this, __source: {fileName: _jsxFileName, lineNumber: 48}}
+          , React.createElement('div', { className: "mx-auto grid max-w-7xl gap-2"   , __self: this, __source: {fileName: _jsxFileName, lineNumber: 49}}
+            , links.map(({ to, label, icon: Icon }) => (
+              React.createElement(Link, { key: to, to: to, onClick: () => setOpen(false), className: "flex min-h-12 items-center gap-3 rounded-lg px-4 text-sm font-medium text-foreground hover:bg-accent"         , __self: this, __source: {fileName: _jsxFileName, lineNumber: 51}}
+                , React.createElement(Icon, { 'aria-hidden': "true", className: "size-5 text-primary" , __self: this, __source: {fileName: _jsxFileName, lineNumber: 52}} ), label
+              )
+            ))
+            , React.createElement(Link, { to: "/HomeCaregiver", onClick: () => setOpen(false), className: "min-h-12 rounded-lg px-4 py-3 text-sm font-medium text-primary hover:bg-accent"       , __self: this, __source: {fileName: _jsxFileName, lineNumber: 55}}, "Área do cuidador"  )
+          )
+        )
+      )
+    )
   );
 }

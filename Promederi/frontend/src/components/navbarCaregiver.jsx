@@ -1,135 +1,29 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import React from "react";
+const _jsxFileName = "";import { Link, useLocation } from "react-router-dom";
+import { House, UserRound, Users } from "lucide-react";
+import { BrandLogo } from "./BrandLogo";
 
-export default function Navbar() {
-  const [menuOpen, setMenuOpen] = useState(false);
+const links = [
+  { to: "/HomeCaregiver", label: "Plantão", icon: House },
+  { to: "/ClientesCaregiver", label: "Clientes e anotações", icon: Users },
+  { to: "/PerfilCaregiver", label: "Meu perfil", icon: UserRound },
+] ;
 
+export function NavBarCaregiver() {
+  const location = useLocation();
   return (
-    <>
-      {/* =====================================================
-          DESKTOP NAVBAR
-          ===================================================== */}
-      <nav className="relative hidden h-[84px] w-full items-center bg-[#516FA4] px-8 shadow-lg md:flex">
-        {/* LOGO + NOME DO PRODUTO */}
-        <Link to="/caregiver/HomeCaregiver" className="flex shrink-0 items-center gap-3">
-          <div className="h-10 w-10 rounded-full bg-[#D9D9D9]" />
-          <span className="text-[18px] font-semibold text-white">
-            Promederi
-          </span>
-        </Link>
-
-        {/* LINKS - CENTRALIZADOS NA TELA */}
-        <div className="absolute left-1/2 flex -translate-x-1/2 items-center gap-10">
-          <Link
-            to="/caregiver/HomeCaregiver"
-            className="whitespace-nowrap text-[16px] font-semibold text-white/90 transition hover:text-white"
-          >
-            Página inicial
-          </Link>
-          <Link
-            to="/caregiver/ClientesCaregiver"
-            className="whitespace-nowrap text-[16px] font-semibold text-white/90 transition hover:text-white"
-          >
-            Buscar cuidadores
-          </Link>
-          <Link
-            to="/caregiver/AnotacoesCaregiver"
-            className="whitespace-nowrap text-[16px] font-semibold text-white/90 transition hover:text-white"
-          >
-            Anotação
-          </Link>
-        </div>
-
-        {/* USUÁRIO */}
-        <div className="ml-auto">
-          <Link to="/caregiver/PerfilCaregiver" className="text-[16px] font-semibold text-white hover:underline">
-            Nome
-          </Link>
-        </div>
-      </nav>
-
-      {/* MOBILE / TABLET */}
-      <header className="flex h-[64px] w-full items-center justify-between bg-[#516FA4] px-5 shadow-lg md:hidden">
-        <Link to="/" className="text-[17px] font-semibold text-white">
-          Promederi
-        </Link>
-
-        {/* Hambúrguer */}
-        <button
-          onClick={() => setMenuOpen(true)}
-          className="flex flex-col gap-[5px]"
-          aria-label="Abrir menu"
-        >
-          <span className="h-[2px] w-7 bg-white" />
-          <span className="h-[2px] w-7 bg-white" />
-          <span className="h-[2px] w-7 bg-white" />
-        </button>
-      </header>
-
-      {/* OVERLAY */}
-      {menuOpen && (
-        <div
-          onClick={() => setMenuOpen(false)}
-          className="fixed inset-0 z-40 bg-black/40 md:hidden"
-        />
-      )}
-
-      {/* SIDEBAR MOBILE / TABLET */}
-      <aside
-        className={`fixed left-0 top-0 z-50 h-screen w-[150px] bg-[#516FA4] shadow-xl transition-transform duration-300 md:hidden ${
-          menuOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
-      >
-        {/* Botão fechar */}
-        <div className="flex justify-end border-b border-[#314362] px-3 py-4">
-          <button
-            onClick={() => setMenuOpen(false)}
-            className="text-2xl leading-none text-white"
-            aria-label="Fechar menu"
-          >
-            ×
-          </button>
-        </div>
-
-        {/* MENU MOBILE */}
-        <div className="flex flex-col">
-          <Link
-            to="/HomeCaregiver"
-            onClick={() => setMenuOpen(false)}
-            className="border-b border-[#6B87B5] px-2 py-3 text-[15px] text-white transition hover:bg-[#466394]"
-          >
-            Página inicial
-          </Link>
-          <Link
-            to="/ClientesCaregiver"
-            onClick={() => setMenuOpen(false)}
-            className="border-b border-[#6B87B5] px-2 py-3 text-[15px] text-white transition hover:bg-[#466394]"
-          >
-            Buscar cuidadores
-          </Link>
-          <Link
-            to="/AnotacoesCaregiver"
-            onClick={() => setMenuOpen(false)}
-            className="border-b border-[#6B87B5] px-2 py-3 text-[15px] text-white transition hover:bg-[#466394]"
-          >
-            Anotação
-          </Link>
-          <Link
-            to="/PerfilCaregiver"
-            onClick={() => setMenuOpen(false)}
-            className="px-2 py-3 text-[15px] text-white transition hover:bg-[#466394]"
-          >
-            Perfil
-          </Link>
-          <Link
-            to="/login"
-            onClick={() => setMenuOpen(false)}
-            className="px-2 py-3 text-[15px] text-white transition hover:bg-[#466394]"
-          >
-            Sair
-          </Link>
-        </div>
-      </aside>
-    </>
+    React.createElement('header', { className: "border-b border-primary/15 bg-primary text-primary-foreground"   , __self: this, __source: {fileName: _jsxFileName, lineNumber: 13}}
+      , React.createElement('div', { className: "mx-auto flex max-w-7xl flex-col gap-5 px-5 py-5 lg:flex-row lg:items-center lg:justify-between lg:px-8"          , __self: this, __source: {fileName: _jsxFileName, lineNumber: 14}}
+        , React.createElement(Link, { to: "/HomeCaregiver", className: "[&_span]:text-primary-foreground", __self: this, __source: {fileName: _jsxFileName, lineNumber: 15}}, React.createElement(BrandLogo, {__self: this, __source: {fileName: _jsxFileName, lineNumber: 15}} ))
+        , React.createElement('nav', { 'aria-label': "Navegação do cuidador"  , className: "flex gap-1 overflow-x-auto pb-1"   , __self: this, __source: {fileName: _jsxFileName, lineNumber: 16}}
+          , links.map(({ to, label, icon: Icon }) => (
+            React.createElement(Link, { key: to, to: to, className: `flex min-h-11 shrink-0 items-center gap-2 rounded-lg px-4 text-sm font-medium hover:bg-primary-foreground/10 ${location.pathname === to ? "bg-primary-foreground/15" : ""}`         , __self: this, __source: {fileName: _jsxFileName, lineNumber: 18}}
+              , React.createElement(Icon, { 'aria-hidden': "true", className: "size-4", __self: this, __source: {fileName: _jsxFileName, lineNumber: 19}} ), label
+            )
+          ))
+          , React.createElement(Link, { to: "/", className: "min-h-11 shrink-0 rounded-lg px-4 py-3 text-sm font-medium text-highlight hover:bg-primary-foreground/10"        , __self: this, __source: {fileName: _jsxFileName, lineNumber: 22}}, "Visão do familiar"  )
+        )
+      )
+    )
   );
 }

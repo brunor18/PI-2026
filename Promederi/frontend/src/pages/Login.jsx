@@ -1,17 +1,6 @@
-export default function Login() {
-  return (
-    <div className="min-h-screen bg-white">
-      <main className="w-full bg-[#314878] px-6 py-10 sm:px-12 sm:py-16 md:px-20 md:py-24">
-        <div className="mx-auto max-w-6xl">
-          <h1 className="text-2xl font-normal leading-snug text-white sm:text-4xl sm:leading-tight md:text-5xl lg:text-6xl">
-            Seja bem vindo <br className="block sm:hidden" />
-            cuidador, ao <br className="block sm:hidden" />
-            sistema de <br className="block sm:hidden" />
-            cuidados: <br className="block sm:hidden" />
-            Promederi
-          </h1>
-        </div>
-      </main>
-    </div>
-  );
-}
+import React from "react";
+const _jsxFileName = "";
+import { useNavigate } from "react-router-dom";
+import { BrandLogo } from "@/components/BrandLogo";
+import { Button } from "@/components/ui/button";
+export function Login() { const navigate = useNavigate(); const submit = (event) => { event.preventDefault(); navigate("/"); }; return React.createElement('main', { className: "grid min-h-screen place-items-center bg-background p-5"    , __self: this, __source: {fileName: _jsxFileName, lineNumber: 5}}, React.createElement('section', { className: "w-full max-w-md rounded-lg border border-border bg-card p-8 shadow-modal"       , __self: this, __source: {fileName: _jsxFileName, lineNumber: 5}}, React.createElement(BrandLogo, {__self: this, __source: {fileName: _jsxFileName, lineNumber: 5}} ), React.createElement('p', { className: "mt-7 text-sm font-semibold text-emergency"   , __self: this, __source: {fileName: _jsxFileName, lineNumber: 5}}, "BEM-VINDO DE VOLTA"  ), React.createElement('h1', { className: "mt-2 font-heading text-3xl font-semibold text-primary"    , __self: this, __source: {fileName: _jsxFileName, lineNumber: 5}}, "Acesse sua conta"  ), React.createElement('p', { className: "mt-2 text-sm text-muted-foreground"  , __self: this, __source: {fileName: _jsxFileName, lineNumber: 5}}, "Entre para acompanhar quem você ama."     ), React.createElement('form', { onSubmit: submit, className: "mt-7 space-y-4" , __self: this, __source: {fileName: _jsxFileName, lineNumber: 5}}, React.createElement('label', { className: "block text-sm font-medium text-foreground"   , __self: this, __source: {fileName: _jsxFileName, lineNumber: 5}}, "E-mail", React.createElement('input', { required: true, type: "email", className: "mt-2 min-h-12 w-full rounded-lg border border-input bg-background px-4 outline-hidden focus:border-primary focus:ring-3 focus:ring-primary/15"           , __self: this, __source: {fileName: _jsxFileName, lineNumber: 5}} )), React.createElement('label', { className: "block text-sm font-medium text-foreground"   , __self: this, __source: {fileName: _jsxFileName, lineNumber: 5}}, "Senha", React.createElement('input', { required: true, type: "password", className: "mt-2 min-h-12 w-full rounded-lg border border-input bg-background px-4 outline-hidden focus:border-primary focus:ring-3 focus:ring-primary/15"           , __self: this, __source: {fileName: _jsxFileName, lineNumber: 5}} )), React.createElement(Button, { type: "submit", className: "w-full", __self: this, __source: {fileName: _jsxFileName, lineNumber: 5}}, "Entrar")))); }
