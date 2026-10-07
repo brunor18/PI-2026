@@ -96,7 +96,7 @@ namespace Promederi.Controllers
             }
 
             var pinValido =
-                BCrypt.Net.BCrypt.Verify(
+                VerificarCredencial(
                     dto.PIN,
                     usuario.PIN
                 );
@@ -204,7 +204,7 @@ namespace Promederi.Controllers
 
             // Verifica a senha usando o hash.
             var senhaValida =
-                BCrypt.Net.BCrypt.Verify(
+                VerificarCredencial(
                     dto.senha,
                     usuario.senha
                 );
@@ -248,6 +248,24 @@ namespace Promederi.Controllers
         }
 
 
+
+        // Um hash inválido deve rejeitar a autenticação, sem gerar erro 500.
+        private static bool VerificarCredencial(string valor, string? hash)
+        {
+            if (string.IsNullOrWhiteSpace(hash))
+            {
+                return false;
+            }
+
+            try
+            {
+                return BCrypt.Net.BCrypt.Verify(valor, hash);
+            }
+            catch (SaltParseException)
+            {
+                return false;
+            }
+        }
 
         // verifica se precisa da senha
 

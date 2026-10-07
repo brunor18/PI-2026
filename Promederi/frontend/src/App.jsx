@@ -8,6 +8,7 @@ import { ClientesCaregiver } from "./pages/caregiver/ClientesCaregiver.jsx";
 import { PerfilCaregiver } from "./pages/caregiver/PerfilCaregiver.jsx";
 import { AnotacoesCaregiver } from "./pages/caregiver/AnotacoesCaregiver.jsx";
 import { Login } from "./pages/Login.jsx";
+import { Cadastro } from "./pages/Cadastro.jsx";
 
 export default function App() {
   return (
@@ -22,6 +23,7 @@ export default function App() {
         <Route path="/PerfilCaregiver" element={<PerfilCaregiver />} />
         <Route path="/AnotacoesCaregiver" element={<AnotacoesCaregiver />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/cadastro" element={<Cadastro />} />
       </Routes>
     </BrowserRouter>
   );
