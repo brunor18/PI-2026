@@ -26,11 +26,17 @@ namespace backend.Data
                     .OnDelete(DeleteBehavior.Cascade);
             });
 
-            modelBuilder.Entity<Medicamento>()  
+            modelBuilder.Entity<Medicamento>()
                 .HasOne(m => m.Usuario)
                 .WithMany(u => u.Medicamentos)
                 .HasForeignKey(m => m.UsuarioId)  // um usuario pode possuir varios medicamentos, mas cada medicamento pertence a apenas um usuario
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Usuario>()
+            .HasOne(u => u.Idoso)
+            .WithMany(u => u.Cuidadores)
+            .HasForeignKey(u => u.IdosoId)
+            .OnDelete(DeleteBehavior.Restrict);
         }
 
 

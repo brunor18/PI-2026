@@ -12,6 +12,7 @@ const dadosIniciais = {
   senha: "",
   confirmarSenha: "",
   PIN: "",
+  tipoUsuario: 1,
 };
 
 const campos = [
@@ -61,6 +62,7 @@ export function Cadastro() {
         numeroTelefone: dados.numeroTelefone.trim(),
         senha: dados.senha,
         PIN: dados.PIN,
+        tipoUsuario: dados.tipoUsuario,
       });
 
       if (response.status !== 201) {
@@ -107,6 +109,33 @@ export function Cadastro() {
               Preencha seus dados para começar.
             </p>
             <form onSubmit={fazerCadastro} className="mt-4 space-y-3" aria-busy={carregando}>
+              <fieldset>
+                <legend className="text-lg font-medium text-foreground">
+                  Tipo de conta
+                </legend>
+                <div className="mt-2 grid grid-cols-1 gap-2 min-[360px]:grid-cols-2">
+                  <Button
+                    type="button"
+                    variant={dados.tipoUsuario === 2 ? "default" : "outline"}
+                    disabled={carregando}
+                    aria-pressed={dados.tipoUsuario === 2}
+                    onClick={() => atualizarCampo("tipoUsuario", 2)}
+                    className="min-h-12 w-full px-2 text-base font-semibold"
+                  >
+                    Conta cuidador
+                  </Button>
+                  <Button
+                    type="button"
+                    variant={dados.tipoUsuario === 1 ? "default" : "outline"}
+                    disabled={carregando}
+                    aria-pressed={dados.tipoUsuario === 1}
+                    onClick={() => atualizarCampo("tipoUsuario", 1)}
+                    className="min-h-12 w-full px-2 text-base font-semibold"
+                  >
+                    Conta Idoso
+                  </Button>
+                </div>
+              </fieldset>
               {campos.map((campo) => {
                 const protegido = campo.tipo === "password";
                 const visivel = Boolean(visibilidade[campo.nome]);

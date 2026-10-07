@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using backend.Models;
 
 namespace backend.DTO
 {
@@ -10,5 +11,8 @@ namespace backend.DTO
 
         [Required]
         public string PIN { get; set; } = string.Empty;
+
+        [Required]
+        public TipoUsuario TipoUsuario { get; set; }
     }
 }           

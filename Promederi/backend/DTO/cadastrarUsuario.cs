@@ -22,5 +22,8 @@ namespace backend.DTO
 
         [Required]
         public string numeroTelefone { get; set; } = string.Empty;
+
+        [Range(1, 2, ErrorMessage = "O tipo de usuário deve ser 1 (Idoso) ou 2 (Cuidador).")]
+        public int tipoUsuario { get; set; }
     }
 }

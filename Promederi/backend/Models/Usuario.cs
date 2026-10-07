@@ -16,6 +16,18 @@
 
         public DateTime? UltimaAutenticacaoSenha { get; set; }
 
+        public TipoUsuario TipoUsuario { get; set; }
+
+        // Preenchido somente quando o usuário for cuidador
+        public int? IdosoId { get; set; }
+
+        // Navegação: cuidador -> idoso
+        public Usuario? Idoso { get; set; }
+
+        // Navegação: idoso -> cuidadores
+        public ICollection<Usuario> Cuidadores { get; set; }
+            = new List<Usuario>();
+
         public ICollection<Medicamento> Medicamentos { get; set; }
         = new List<Medicamento>();
 

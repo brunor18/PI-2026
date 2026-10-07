@@ -60,6 +60,9 @@ namespace Promederi.Controllers
 
                 numeroTelefone = dto.numeroTelefone.Trim(),
 
+                TipoUsuario = (TipoUsuario)dto.tipoUsuario,
+
+                IdosoId = null, 
 
                 UltimaAutenticacaoSenha = null
             };
@@ -150,7 +153,9 @@ namespace Promederi.Controllers
                 {
                     id = usuario.Id,
                     nome = usuario.nome,
-                    email = usuario.email
+                    email = usuario.email,
+                    tipoUsuario = usuario.TipoUsuario,
+                    idosoId = usuario.IdosoId
                 }
             });
         }
@@ -247,8 +252,6 @@ namespace Promederi.Controllers
             });
         }
 
-
-
         // Um hash inválido deve rejeitar a autenticação, sem gerar erro 500.
         private static bool VerificarCredencial(string valor, string? hash)
         {
@@ -337,8 +340,25 @@ namespace Promederi.Controllers
                 new Claim(
                     "token_type",
                     tipoToken
+                ),
+                // Tipo do usuário
+                new Claim(
+                    "tipo_usuario",
+                    usuario.TipoUsuario.ToString()
                 )
+
             };
+
+
+            if (usuario.IdosoId.HasValue)
+            {
+                claims.Add(
+                    new Claim(
+                        "idoso_id",
+                        usuario.IdosoId.Value.ToString()
+                    )
+                );
+            }
 
             var chave =
                 new SymmetricSecurityKey(
