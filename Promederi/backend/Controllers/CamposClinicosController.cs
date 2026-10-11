@@ -58,19 +58,19 @@ public class CamposClinicosController(AppDbContext context) : UsuarioControllerB
         return CreatedAtAction(nameof(Obter), new { usuarioId, id = campo.Id }, Resposta(campo));
     }
 
-    [HttpPut("{id:int}")]
-    public async Task<ActionResult<CampoClinicoResposta>> Atualizar(int usuarioId, int id, SalvarCampoClinico dto)
+    [HttpPatch("{id:int}")]
+    public async Task<ActionResult<CampoClinicoResposta>> Atualizar(int usuarioId, int id, AtualizarCampoClinico dto)
     {
         if (!usuarioTemAcesso(usuarioId)) return Forbid();
         var campo = await context.camposClinicos
             .FirstOrDefaultAsync(c => c.Id == id && c.UsuarioId == usuarioId);
         if (campo is null) return NotFound();
-        if (string.IsNullOrWhiteSpace(dto.Nome))
+        if (dto.Nome is not null && string.IsNullOrWhiteSpace(dto.Nome))
             return BadRequest(new { mensagem = "Informe o nome do campo clínico." });
 
-        campo.Nome = dto.Nome.Trim();
-        campo.Descricao = dto.Descricao;
-        campo.Valor = dto.Valor;
+        if (dto.Nome is not null) campo.Nome = dto.Nome.Trim();
+        if (dto.Descricao is not null) campo.Descricao = dto.Descricao;
+        if (dto.Valor is not null) campo.Valor = dto.Valor;
         await context.SaveChangesAsync();
         return Ok(Resposta(campo));
     }
