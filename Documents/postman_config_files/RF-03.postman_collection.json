@@ -1,0 +1,267 @@
+{
+  "info": {
+    "name": "Promederi - RF-03 - Procedimentos cirúrgicos",
+    "description": "Configure baseUrl, usuarioId e accessToken com um JWT de acesso do mesmo usuário. Execute na ordem: cadastrar, listar e consultar. procedimentoId é preenchido automaticamente após o cadastro. Data no formato YYYY-MM-DD. Observações médicas são opcionais. A API e o MySQL devem estar disponíveis, com a migration AdicionarProcedimentosCirurgicos aplicada. Cada execução cria um procedimento persistente.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_postman_id": "2a080e74-e0c7-42d5-8bfd-c2f285bbf405"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{accessToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://localhost:7053",
+      "type": "string"
+    },
+    {
+      "key": "usuarioId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "accessToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "procedimentoId",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "01 - Cadastrar procedimento cirúrgico",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/usuarios/{{usuarioId}}/procedimentos-cirurgicos",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "usuarios",
+            "{{usuarioId}}",
+            "procedimentos-cirurgicos"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"data\": \"2026-10-11\",\n  \"tipoProcedimento\": \"Colecistectomia\",\n  \"observacoesMedicas\": \"Procedimento sem intercorrências. Acompanhamento pós-operatório indicado.\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status 201\", function () { pm.response.to.have.status(201); });",
+              "if (pm.response.code === 201) {",
+              "  const procedimento = pm.response.json();",
+              "  pm.test(\"Dados do procedimento cadastrados\", function () {",
+              "    pm.expect(procedimento.id).to.be.a(\"number\");",
+              "    pm.expect(String(procedimento.usuarioId)).to.eql(String(pm.variables.get(\"usuarioId\")));",
+              "    pm.expect(procedimento.data).to.eql(\"2026-10-11\");",
+              "    pm.expect(procedimento.tipoProcedimento).to.eql(\"Colecistectomia\");",
+              "    pm.expect(procedimento.observacoesMedicas).to.eql(\"Procedimento sem intercorrências. Acompanhamento pós-operatório indicado.\");",
+              "  });",
+              "  pm.collectionVariables.set(\"procedimentoId\", String(procedimento.id));",
+              "  pm.test(\"Cabeçalho Location presente\", function () { pm.expect(pm.response.headers.get(\"Location\")).to.be.a(\"string\"); });",
+              "}"
+            ]
+          }
+        }
+      ],
+      "response": []
+    },
+    {
+      "name": "02 - Listar procedimentos cirúrgicos",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/usuarios/{{usuarioId}}/procedimentos-cirurgicos",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "usuarios",
+            "{{usuarioId}}",
+            "procedimentos-cirurgicos"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status 200\", function () { pm.response.to.have.status(200); });",
+              "if (pm.response.code === 200) {",
+              "  pm.test(\"Lista contém o procedimento criado e pertence ao usuário\", function () {",
+              "    const procedimentos = pm.response.json();",
+              "    pm.expect(procedimentos).to.be.an(\"array\");",
+              "    pm.expect(procedimentos.some(p => String(p.id) === String(pm.variables.get(\"procedimentoId\")))).to.eql(true);",
+              "    procedimentos.forEach(p => pm.expect(String(p.usuarioId)).to.eql(String(pm.variables.get(\"usuarioId\"))));",
+              "  });",
+              "}"
+            ]
+          }
+        }
+      ],
+      "response": []
+    },
+    {
+      "name": "03 - Consultar procedimento cirúrgico",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/usuarios/{{usuarioId}}/procedimentos-cirurgicos/{{procedimentoId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "usuarios",
+            "{{usuarioId}}",
+            "procedimentos-cirurgicos",
+            "{{procedimentoId}}"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status 200\", function () { pm.response.to.have.status(200); });",
+              "if (pm.response.code === 200) {",
+              "  pm.test(\"Identificador e usuário correspondem ao cadastro\", function () {",
+              "    const procedimento = pm.response.json();",
+              "    pm.expect(String(procedimento.id)).to.eql(String(pm.variables.get(\"procedimentoId\")));",
+              "    pm.expect(String(procedimento.usuarioId)).to.eql(String(pm.variables.get(\"usuarioId\")));",
+              "  });",
+              "}"
+            ]
+          }
+        }
+      ],
+      "response": []
+    },
+    {
+      "name": "04 - Rejeitar cadastro sem data",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/usuarios/{{usuarioId}}/procedimentos-cirurgicos",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "usuarios",
+            "{{usuarioId}}",
+            "procedimentos-cirurgicos"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"tipoProcedimento\": \"Colecistectomia\",\n  \"observacoesMedicas\": \"Teste de validação.\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status 400\", function () { pm.response.to.have.status(400); });"
+            ]
+          }
+        }
+      ],
+      "response": []
+    },
+    {
+      "name": "05 - Rejeitar tipo de procedimento vazio",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/usuarios/{{usuarioId}}/procedimentos-cirurgicos",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "usuarios",
+            "{{usuarioId}}",
+            "procedimentos-cirurgicos"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"data\": \"2026-10-11\",\n  \"tipoProcedimento\": \"   \"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status 400\", function () { pm.response.to.have.status(400); });"
+            ]
+          }
+        }
+      ],
+      "response": []
+    }
+  ]
+}

@@ -15,6 +15,18 @@ namespace backend.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<ProcedimentoCirurgico>(entity =>
+            {
+                entity.HasKey(procedimento => procedimento.id);
+                entity.Property(procedimento => procedimento.data).HasColumnType("date").IsRequired();
+                entity.Property(procedimento => procedimento.tipoProcedimento).HasMaxLength(200).IsRequired();
+                entity.Property(procedimento => procedimento.observacoesMedicas).HasMaxLength(5000);
+                entity.HasOne(procedimento => procedimento.usuario)
+                    .WithMany()
+                    .HasForeignKey(procedimento => procedimento.usuarioId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
+
             modelBuilder.Entity<CampoClinico>(entity =>
             {
                 entity.Property(c => c.Nome).HasMaxLength(100).IsRequired();
@@ -43,6 +55,7 @@ namespace backend.Data
 
         public DbSet<Usuario> usuarios { get; set; } // transforma a classe Usuario em uma tabela do banco de dados
         public DbSet<CampoClinico> camposClinicos { get; set; }
+        public DbSet<ProcedimentoCirurgico> procedimentosCirurgicos { get; set; }
         public DbSet<Medicamento> medicamentos { get; set; } // transforma a classe Medicamentos em uma tabela do banco de dados
 
     }

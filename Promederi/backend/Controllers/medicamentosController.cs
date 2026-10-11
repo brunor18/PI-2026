@@ -4,7 +4,6 @@ using backend.Data;
 using backend.DTO;
 using backend.Models;
 using Microsoft.AspNetCore.Authorization;
-using System.Security.Claims;
 
 
 namespace Promederi.Controllers;
@@ -12,7 +11,7 @@ namespace Promederi.Controllers;
 [Authorize]
 [ApiController]
 [Route("api/usuarios/{usuarioId}/medicamentos")]
-public class MedicamentosController : ControllerBase
+public class MedicamentosController : UsuarioControllerBase
 {
     private readonly AppDbContext _context;
 
@@ -21,32 +20,6 @@ public class MedicamentosController : ControllerBase
         _context = context;
     }
 
-    private int? ObterUsuarioLogadoId()
-    {
-        var usuarioId = User.FindFirst(
-            ClaimTypes.NameIdentifier
-        )?.Value;
-
-        if (!int.TryParse(usuarioId, out var id))
-        {
-            return null;
-        }
-
-        return id;
-    }
-
-    private bool UsuarioTemAcesso(int usuarioId)
-    {
-        var usuarioLogadoId = ObterUsuarioLogadoId();
-
-        return usuarioLogadoId.HasValue &&
-               usuarioLogadoId.Value == usuarioId;
-    }
-
-    private bool TokenEhDeAcesso()
-    {
-        return User.FindFirst("token_type")?.Value == "access";
-    }
 
 
 
@@ -55,13 +28,7 @@ public class MedicamentosController : ControllerBase
     public async Task<ActionResult<IEnumerable<Medicamento>>> GetMedicamentos(int usuarioId)
     {
 
-        if (!TokenEhDeAcesso())
-        {
-            return Forbid();
-        }
-
-
-        if (!UsuarioTemAcesso(usuarioId))
+        if (!usuarioTemAcesso(usuarioId))
         {
             return Forbid();
         }
@@ -88,13 +55,7 @@ public class MedicamentosController : ControllerBase
     public async Task<ActionResult<Medicamento>> GetMedicamentoPorID(int usuarioId, int id)
     {
 
-        if (!TokenEhDeAcesso())
-        {
-            return Forbid();
-        }
-
-
-        if (!UsuarioTemAcesso(usuarioId))
+        if (!usuarioTemAcesso(usuarioId))
         {
             return Forbid();
         }
@@ -123,12 +84,7 @@ public class MedicamentosController : ControllerBase
         criarMedicamento dto)
     {
 
-        if (!TokenEhDeAcesso())
-        {
-            return Forbid();
-        }
-
-        if (!UsuarioTemAcesso(usuarioId))
+        if (!usuarioTemAcesso(usuarioId))
         {
             return Forbid();
         }
@@ -183,13 +139,7 @@ public class MedicamentosController : ControllerBase
         atualizarMedicamento dto)
     {
 
-        if (!TokenEhDeAcesso())
-        {
-            return Forbid();
-        }
-
-
-        if (!UsuarioTemAcesso(usuarioId))
+        if (!usuarioTemAcesso(usuarioId))
         {
             return Forbid();
         }
@@ -258,13 +208,7 @@ public class MedicamentosController : ControllerBase
         int id)
     {
 
-        if (!TokenEhDeAcesso())
-        {
-            return Forbid();
-        }
-
-
-        if (!UsuarioTemAcesso(usuarioId))
+        if (!usuarioTemAcesso(usuarioId))
         {
             return Forbid();
         }

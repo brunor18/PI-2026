@@ -1,4 +1,3 @@
-using System.Security.Claims;
 using backend.Data;
 using backend.DTO;
 using backend.Models;
@@ -11,20 +10,15 @@ namespace Promederi.Controllers;
 [Authorize]
 [ApiController]
 [Route("api/usuarios/{usuarioId:int}/campos-clinicos")]
-public class CamposClinicosController(AppDbContext context) : ControllerBase
+public class CamposClinicosController(AppDbContext context) : UsuarioControllerBase
 {
-    private bool TemAcesso(int usuarioId) =>
-        User.FindFirst("token_type")?.Value == "access" &&
-        int.TryParse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value, out var id) &&
-        id == usuarioId;
-
     private static CampoClinicoResposta Resposta(CampoClinico campo) =>
         new(campo.Id, campo.Nome, campo.Descricao, campo.Valor, campo.CreatedAt);
 
     [HttpGet]
     public async Task<ActionResult<IEnumerable<CampoClinicoResposta>>> Listar(int usuarioId)
     {
-        if (!TemAcesso(usuarioId)) return Forbid();
+        if (!usuarioTemAcesso(usuarioId)) return Forbid();
 
         var campos = await context.camposClinicos.AsNoTracking()
             .Where(c => c.UsuarioId == usuarioId).OrderBy(c => c.Id)
@@ -36,7 +30,7 @@ public class CamposClinicosController(AppDbContext context) : ControllerBase
     [HttpGet("{id:int}")]
     public async Task<ActionResult<CampoClinicoResposta>> Obter(int usuarioId, int id)
     {
-        if (!TemAcesso(usuarioId)) return Forbid();
+        if (!usuarioTemAcesso(usuarioId)) return Forbid();
 
         var campo = await context.camposClinicos.AsNoTracking()
             .FirstOrDefaultAsync(c => c.Id == id && c.UsuarioId == usuarioId);
@@ -47,7 +41,7 @@ public class CamposClinicosController(AppDbContext context) : ControllerBase
     [HttpPost]
     public async Task<ActionResult<CampoClinicoResposta>> Criar(int usuarioId, SalvarCampoClinico dto)
     {
-        if (!TemAcesso(usuarioId)) return Forbid();
+        if (!usuarioTemAcesso(usuarioId)) return Forbid();
         if (!await context.usuarios.AnyAsync(u => u.Id == usuarioId)) return NotFound();
         if (string.IsNullOrWhiteSpace(dto.Nome))
             return BadRequest(new { mensagem = "Informe o nome do campo clínico." });
@@ -67,7 +61,7 @@ public class CamposClinicosController(AppDbContext context) : ControllerBase
     [HttpPut("{id:int}")]
     public async Task<ActionResult<CampoClinicoResposta>> Atualizar(int usuarioId, int id, SalvarCampoClinico dto)
     {
-        if (!TemAcesso(usuarioId)) return Forbid();
+        if (!usuarioTemAcesso(usuarioId)) return Forbid();
         var campo = await context.camposClinicos
             .FirstOrDefaultAsync(c => c.Id == id && c.UsuarioId == usuarioId);
         if (campo is null) return NotFound();
@@ -84,7 +78,7 @@ public class CamposClinicosController(AppDbContext context) : ControllerBase
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> Excluir(int usuarioId, int id)
     {
-        if (!TemAcesso(usuarioId)) return Forbid();
+        if (!usuarioTemAcesso(usuarioId)) return Forbid();
         var campo = await context.camposClinicos
             .FirstOrDefaultAsync(c => c.Id == id && c.UsuarioId == usuarioId);
         if (campo is null) return NotFound();
