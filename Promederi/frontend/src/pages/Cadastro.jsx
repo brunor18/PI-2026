@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Eye, EyeOff } from "lucide-react";
+import { ArrowLeft, Eye, EyeOff } from "lucide-react";
 import { BrandLogo } from "@/components/BrandLogo";
 import { Button } from "@/components/ui/button";
 import api from "../services/api.service";
@@ -89,7 +89,10 @@ export function Cadastro() {
 
   return (
     <main className="grid min-h-screen place-items-center bg-background p-4">
-      <section className="w-full max-w-sm rounded-lg border border-border bg-card p-4 shadow-modal sm:p-5">
+      <section className="w-full max-w-md rounded-lg border border-border bg-card p-4 shadow-modal sm:p-5">
+        <Button asChild variant="ghost" className="mb-4 px-0 text-base">
+          <Link to="/"><ArrowLeft aria-hidden="true" /> Voltar ao menu principal</Link>
+        </Button>
         <BrandLogo />
         <h1 className="mt-4 font-heading text-3xl font-semibold leading-tight text-primary">
           {sucesso ? "Conta criada" : "Crie sua conta"}
