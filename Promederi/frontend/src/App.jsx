@@ -1,5 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { HomeClient } from "./pages/client/HomeClient.jsx";
+import { RegistrosClient } from "./pages/client/RegistrosClient.jsx";
 import { CuidadoresClient } from "./pages/client/CuidadoresClient.jsx";
 import { AnotacoesClient } from "./pages/client/AnotacoesClient.jsx";
 import { IAClient } from "./pages/client/IAClient.jsx";
@@ -17,6 +18,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/HomeClient" element={<HomeClient />} />
+        <Route path="/RegistrosClient" element={<RegistrosClient />} />
         <Route path="/CuidadoresClient" element={<CuidadoresClient />} />
         <Route path="/IAClient" element={<IAClient />} />
         <Route path="/AnotacoesClient" element={<AnotacoesClient />} />

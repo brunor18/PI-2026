@@ -153,7 +153,7 @@ export function ClientesCaregiver() {
                 , React.createElement('p', { className: "text-sm font-semibold text-emergency"  , __self: this, __source: {fileName: _jsxFileName, lineNumber: 154}}, "Registro de cuidado"  )
                 , React.createElement('h2', { id: "new-note-title", className: "mt-1 font-heading text-2xl font-semibold text-primary"    , __self: this, __source: {fileName: _jsxFileName, lineNumber: 155}}, "Nova anotação para "   , client.name)
               )
-              , React.createElement(Button, { variant: "ghost", size: "icon", 'aria-label': "Fechar", onClick: () => setNoteOpen(false), __self: this, __source: {fileName: _jsxFileName, lineNumber: 157}}, React.createElement(X, { className: "size-5", __self: this, __source: {fileName: _jsxFileName, lineNumber: 157}} ))
+              , React.createElement(Button, { variant: "ghost", size: "icon", 'aria-label': "Fechar", onClick: () => setNoteOpen(false), className: "size-11 shrink-0 !text-destructive hover:!bg-destructive/10 hover:!text-destructive [&_svg]:!size-7", __self: this, __source: {fileName: _jsxFileName, lineNumber: 157}}, React.createElement(X, { strokeWidth: 2.5, __self: this, __source: {fileName: _jsxFileName, lineNumber: 157}} ))
             )
             , React.createElement('label', { className: "mt-6 block text-sm font-medium text-foreground"    , __self: this, __source: {fileName: _jsxFileName, lineNumber: 159}}, "O que aconteceu durante o cuidado?"
 

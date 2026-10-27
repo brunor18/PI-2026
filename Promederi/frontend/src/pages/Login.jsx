@@ -17,20 +17,48 @@ export function Login() {
   const [erro, setErro] = useState("");
   const requerSenha = Boolean(tokenTemporario);
 
+  function obterTipoUsuarioDoToken(token) {
+    try {
+      const payload = token.split(".")[1];
+      const base64 = payload.replace(/-/g, "+").replace(/_/g, "/");
+      const dadosToken = JSON.parse(atob(base64));
+
+      if (dadosToken.tipo_usuario === "Cuidador") return 2;
+      if (dadosToken.tipo_usuario === "Idoso") return 1;
+      return dadosToken.tipo_usuario;
+    } catch {
+      return null;
+    }
+  }
+
   function concluirLogin(dados) {
     if (!dados.token || !dados.usuario?.id) {
       throw new Error("A API não retornou os dados necessários para entrar.");
     }
 
+    const tipoUsuario = dados.usuario.tipoUsuario ?? obterTipoUsuarioDoToken(dados.token);
+    let destino;
+
+    switch (Number(tipoUsuario)) {
+      case 2:
+        destino = "/HomeCaregiver";
+        break;
+      case 1:
+        destino = "/HomeClient";
+        break;
+      default:
+        throw new Error("Tipo de usuário inválido. Não foi possível entrar.");
+    }
+
     sessionStorage.setItem("accessToken", dados.token);
-    sessionStorage.setItem("usuario", JSON.stringify(dados.usuario));
+    sessionStorage.setItem("usuario", JSON.stringify({ ...dados.usuario, tipoUsuario: Number(tipoUsuario) }));
     api.defaults.headers.common.Authorization = `Bearer ${dados.token}`;
     setTokenTemporario("");
     setPin("");
     setMostrarPin(false);
     setSenha("");
     setMostrarSenha(false);
-    navigate("/", { replace: true });
+    navigate(destino, { replace: true });
   }
 
   async function fazerLogin() {
