@@ -63,7 +63,7 @@ export function IAClient() {
 
           , React.createElement('div', { className: "mt-6 space-y-5" , __self: this, __source: {fileName: _jsxFileName, lineNumber: 63}}
             , React.createElement('div', { className: "grid grid-cols-[auto_minmax(0,1fr)] gap-3"  , __self: this, __source: {fileName: _jsxFileName, lineNumber: 64}}
-              , React.createElement('span', { className: "grid size-10 shrink-0 place-items-center rounded-lg bg-highlight/35 text-emergency"      , __self: this, __source: {fileName: _jsxFileName, lineNumber: 65}}
+              , React.createElement('span', { className: "grid size-10 shrink-0 place-items-center rounded-lg bg-muted text-primary"      , __self: this, __source: {fileName: _jsxFileName, lineNumber: 65}}
                 , React.createElement(Bot, { className: "size-5", __self: this, __source: {fileName: _jsxFileName, lineNumber: 66}} )
               )
               , React.createElement('p', { className: "rounded-lg bg-background p-4 text-sm leading-6 text-foreground"     , __self: this, __source: {fileName: _jsxFileName, lineNumber: 68}}, "Olá, João. Conte o que você percebeu hoje e informe horário, intensidade e se já aconteceu antes."
@@ -72,7 +72,7 @@ export function IAClient() {
             )
 
             , sent && (
-              React.createElement('div', { className: "ml-auto max-w-2xl rounded-lg bg-highlight/35 p-4 text-sm leading-6 text-primary"       , __self: this, __source: {fileName: _jsxFileName, lineNumber: 74}}
+              React.createElement('div', { className: "ml-auto max-w-2xl rounded-lg bg-muted p-4 text-sm leading-6 text-primary"       , __self: this, __source: {fileName: _jsxFileName, lineNumber: 74}}
                 , React.createElement('p', { className: "font-semibold", __self: this, __source: {fileName: _jsxFileName, lineNumber: 75}}, "Relato recebido" )
                 , React.createElement('p', { className: "mt-1", __self: this, __source: {fileName: _jsxFileName, lineNumber: 76}}, message)
                 , React.createElement('div', { className: "mt-4 grid gap-2 border-t border-primary/15 pt-4 text-muted-foreground"      , __self: this, __source: {fileName: _jsxFileName, lineNumber: 77}}

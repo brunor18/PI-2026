@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, Navigate } from "react-router-dom";
-import { ArrowRight, ClipboardList, HeartPulse, Pill, Plus, Stethoscope, X } from "lucide-react";
+import { ArrowRight, ClipboardList, HeartPulse, Pill, Plus, Stethoscope, Users, X } from "lucide-react";
+import lucianaPhoto from "@/assets/luciana-ribeiro.jpg";
 import { NavBarClient } from "@/components/navbarClient";
 import { Button } from "@/components/ui/button";
 import api from "@/services/api.service";
@@ -161,7 +162,6 @@ export function HomeClient() {
       <NavBarClient />
       <main className="mx-auto max-w-7xl px-4 pb-16 pt-8 sm:px-6 sm:pt-10 lg:px-8 lg:pt-12">
         <header className="border-b border-border pb-8 sm:pb-10">
-          <p className="text-sm font-semibold text-emergency">Minha área de saúde</p>
           <h1 className="mt-2 font-heading text-3xl font-semibold leading-tight text-primary sm:text-5xl">
             Boas-vindas, {primeiroNome}!
           </h1>
@@ -181,7 +181,7 @@ export function HomeClient() {
           <div className="grid gap-4 md:grid-cols-3 lg:gap-6">
             {categorias.map(({ id, titulo, descricao, acao, icon: Icon }) => (
               <article key={id} className="flex min-w-0 flex-col rounded-lg border border-border bg-card p-5 shadow-soft sm:p-6">
-                <span className="grid size-12 place-items-center rounded-lg bg-highlight/35 text-emergency"><Icon aria-hidden="true" className="size-6" /></span>
+                <span className="grid size-12 place-items-center rounded-lg bg-muted text-primary"><Icon aria-hidden="true" className="size-6" /></span>
                 <h3 className="mt-5 font-heading text-xl font-semibold text-primary">{titulo}</h3>
                 <p className="mt-2 flex-1 text-sm leading-6 text-muted-foreground">{descricao}</p>
                 <Button type="button" onClick={() => abrirFormulario(id)} disabled={carregando} className="mt-6 min-h-12 w-full justify-between px-4 text-sm sm:text-base">
@@ -196,7 +196,7 @@ export function HomeClient() {
         <section aria-labelledby="historico-titulo" className="pt-12 sm:pt-14">
           <div className="mb-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-start gap-3">
-              <span className="grid size-11 shrink-0 place-items-center rounded-lg bg-highlight/35 text-emergency"><ClipboardList aria-hidden="true" className="size-5" /></span>
+              <span className="grid size-11 shrink-0 place-items-center rounded-lg bg-muted text-primary"><ClipboardList aria-hidden="true" className="size-5" /></span>
               <div>
                 <h2 id="historico-titulo" className="font-heading text-2xl font-semibold text-primary sm:text-3xl">Seus registros</h2>
                 <p className="mt-1 text-sm leading-6 text-muted-foreground">Veja seus cadastros mais recentes.</p>
@@ -210,7 +210,7 @@ export function HomeClient() {
             {categorias.map(({ id, titulo, singular, icon: Icon }) => (
               <section key={id} aria-label={titulo} className="min-w-0 rounded-lg border border-border bg-card p-5 shadow-soft sm:p-6">
                 <div className="flex items-center gap-3">
-                  <Icon aria-hidden="true" className="size-5 shrink-0 text-emergency" />
+                  <Icon aria-hidden="true" className="size-5 shrink-0 text-primary" />
                   <h3 className="font-heading text-lg font-semibold text-primary">{titulo}</h3>
                 </div>
                 {carregando ? (
@@ -235,6 +235,29 @@ export function HomeClient() {
                 )}
               </section>
             ))}
+          </div>
+        </section>
+
+        <section aria-labelledby="cuidadores-titulo" className="pt-12 sm:pt-14">
+          <div className="mb-5 flex items-start gap-3">
+            <span className="grid size-11 shrink-0 place-items-center rounded-lg bg-muted text-primary">
+              <Users aria-hidden="true" className="size-5" />
+            </span>
+            <div>
+              <h2 id="cuidadores-titulo" className="font-heading text-2xl font-semibold text-primary sm:text-3xl">Meus Cuidadores</h2>
+              <p className="mt-1 text-sm leading-6 text-muted-foreground">Acompanhe os profissionais que fazem parte da sua rede de cuidado.</p>
+            </div>
+          </div>
+          <div className="flex flex-col gap-5 rounded-lg border border-border bg-card p-5 shadow-soft sm:flex-row sm:items-center sm:p-6">
+            <img src={lucianaPhoto} alt="" width="816" height="816" className="size-20 shrink-0 rounded-full object-cover" />
+            <div className="min-w-0 flex-1">
+              <p className="text-xs font-semibold uppercase text-success">Em plantão</p>
+              <h3 className="mt-1 font-heading text-xl font-semibold text-primary">Luciana Ribeiro</h3>
+              <p className="mt-1 text-sm text-muted-foreground">Cuidadora sênior • 8 anos de experiência</p>
+            </div>
+            <Button asChild variant="outline" className="min-h-12 w-full shrink-0 sm:w-auto">
+              <Link to="/CuidadoresClient">Ver cuidadores <ArrowRight aria-hidden="true" /></Link>
+            </Button>
           </div>
         </section>
 

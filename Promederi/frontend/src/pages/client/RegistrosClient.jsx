@@ -1,6 +1,6 @@
 import { Component, useEffect, useState } from "react";
 import { Link, Navigate } from "react-router-dom";
-import { ArrowLeft, ClipboardList, HeartPulse, Pill, RotateCcw, Search, Stethoscope, X } from "lucide-react";
+import { ArrowLeft, ClipboardList, HeartPulse, Pill, Plus, RotateCcw, Search, Stethoscope, X } from "lucide-react";
 import { NavBarClient } from "@/components/navbarClient";
 import { Button } from "@/components/ui/button";
 import api from "@/services/api.service";
@@ -381,19 +381,29 @@ function ConteudoRegistrosClient() {
 
       <main className="mx-auto max-w-7xl px-4 pb-16 pt-8 sm:px-6 sm:pt-10 lg:px-8 lg:pt-12">
         <header className="border-b border-border pb-8 sm:pb-10">
-          <p className="text-sm font-semibold text-emergency">Meu histórico de saúde</p>
           <h1 className="mt-2 font-heading text-3xl font-semibold leading-tight text-primary sm:text-5xl">
             Todos os registros
           </h1>
           <p className="mt-3 max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg">
             Consulte os medicamentos, procedimentos cirúrgicos e campos clínicos cadastrados na sua conta.
           </p>
-          <Button asChild variant="outline" className="mt-6 min-h-12 w-full sm:w-auto">
-            <Link to="/HomeClient">
-              <ArrowLeft aria-hidden="true" />
-              Voltar à visão geral
-            </Link>
-          </Button>
+          <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+
+            <Button asChild variant="outline" className="min-h-12 w-full sm:w-auto">
+              <Link to="/HomeClient">
+                <ArrowLeft aria-hidden="true" />
+                Voltar à visão geral
+              </Link>
+            </Button>
+
+
+            <Button asChild className="min-h-12 w-full sm:w-auto">
+              <Link to="/HomeClient">
+                <Plus aria-hidden="true" />
+                Novo registro
+              </Link>
+            </Button>
+          </div>
         </header>
 
         {aviso && (
@@ -405,7 +415,7 @@ function ConteudoRegistrosClient() {
         <section aria-label="Resumo dos registros" className="grid gap-4 py-8 sm:grid-cols-3 sm:py-10">
           {categorias.map(({ id, titulo, icon: Icon }) => (
             <div key={id} className="flex items-center gap-4 rounded-lg border border-border bg-card p-5 shadow-soft">
-              <span className="grid size-12 shrink-0 place-items-center rounded-lg bg-highlight/35 text-emergency">
+              <span className="grid size-12 shrink-0 place-items-center rounded-lg bg-muted text-primary">
                 <Icon aria-hidden="true" className="size-6" />
               </span>
               <div>
@@ -425,7 +435,7 @@ function ConteudoRegistrosClient() {
             return (
               <section key={id} aria-labelledby={`titulo-${id}`}>
                 <div className="mb-5 flex items-center gap-3 border-b border-border pb-4">
-                  <Icon aria-hidden="true" className="size-6 shrink-0 text-emergency" />
+                  <Icon aria-hidden="true" className="size-6 shrink-0 text-primary" />
                   <h2 id={`titulo-${id}`} className="font-heading text-2xl font-semibold text-primary sm:text-3xl">
                     {titulo}
                   </h2>

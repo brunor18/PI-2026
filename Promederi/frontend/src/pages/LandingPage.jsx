@@ -41,7 +41,7 @@ export function LandingPage() {
               <Button asChild size="lg" className="h-12 shadow-none"><Link to="/cadastro">Começar a cuidar <ArrowRight aria-hidden="true" /></Link></Button>
             </div>
           </div>
-          <div className="rounded-lg border border-border bg-secondary p-4 sm:p-7">
+          <div className="rounded-lg border border-border bg-muted p-4 sm:p-7">
             <div className="mb-4 flex items-center justify-between gap-3 text-xs font-semibold text-primary"><span>Um olhar para a rotina</span><span className="rounded-full border border-border bg-background px-3 py-1">Exemplo ilustrativo</span></div>
             <article className="rounded-lg border border-border bg-card p-5 sm:p-7" aria-label="Exemplo de acompanhamento familiar">
               <div className="flex items-center gap-4 border-b border-border pb-5">
@@ -61,7 +61,7 @@ export function LandingPage() {
           <div className="mx-auto max-w-7xl px-5 py-16 lg:px-8">
             <p className="text-sm font-semibold text-emergency">Mais clareza no dia a dia</p>
             <h2 id="resources-title" className="mt-2 max-w-2xl font-heading text-3xl font-semibold text-primary sm:text-4xl">Menos informações espalhadas.<br />Mais espaço para o cuidado.</h2>
-            <div className="mt-10 grid gap-8 md:grid-cols-3">{resources.map(({ icon: Icon, title, text }) => <article key={title} className="border-t border-border pt-6"><span className="grid size-11 place-items-center rounded-lg bg-secondary text-primary"><Icon aria-hidden="true" className="size-5" /></span><h3 className="mt-5 font-heading text-xl font-semibold text-primary">{title}</h3><p className="mt-3 text-sm leading-7 text-muted-foreground">{text}</p></article>)}</div>
+            <div className="mt-10 grid gap-8 md:grid-cols-3">{resources.map(({ icon: Icon, title, text }) => <article key={title} className="border-t border-border pt-6"><span className="grid size-11 place-items-center rounded-lg bg-muted text-primary"><Icon aria-hidden="true" className="size-5" /></span><h3 className="mt-5 font-heading text-xl font-semibold text-primary">{title}</h3><p className="mt-3 text-sm leading-7 text-muted-foreground">{text}</p></article>)}</div>
           </div>
         </section>
 
