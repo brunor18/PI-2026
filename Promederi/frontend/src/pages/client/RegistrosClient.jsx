@@ -106,10 +106,10 @@ function CartaoRegistro({ categoria, registro, onEditar, onDeletar }) {
           </div>
         </dl>
         <div className="mt-5 grid grid-cols-2 gap-3 border-t border-border pt-4">
-          <button type="button" onClick={() => onEditar(registro)} aria-label={`Editar ${registro.nomeMedicamento}`} className="flex min-h-11 items-center justify-center rounded-md text-sm font-semibold text-primary underline decoration-2 underline-offset-4 hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+          <button type="button" onClick={() => onEditar(registro)} aria-label={`Editar ${registro.nomeMedicamento}`} className="flex min-h-11 items-center justify-center rounded-md text-sm font-semibold text-primary hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
             Editar
           </button>
-          <button type="button" onClick={() => onDeletar(registro)} aria-label={`Deletar ${registro.nomeMedicamento}`} className="flex min-h-11 items-center justify-center rounded-md text-sm font-semibold text-emergency underline decoration-2 underline-offset-4 hover:bg-emergency-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emergency">
+          <button type="button" onClick={() => onDeletar(registro)} aria-label={`Deletar ${registro.nomeMedicamento}`} className="flex min-h-11 items-center justify-center rounded-md text-sm font-semibold text-destructive hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emergency">
             Deletar
           </button>
         </div>
@@ -119,28 +119,44 @@ function CartaoRegistro({ categoria, registro, onEditar, onDeletar }) {
 
   if (categoria === "procedimentos") {
     return (
-      <article className="min-w-0 rounded-lg border border-border bg-card p-5 shadow-soft sm:p-6">
+      <article className="flex h-full min-w-0 flex-col rounded-lg border border-border bg-card p-5 shadow-soft sm:p-6">
         <h3 className="break-words font-heading text-xl font-semibold text-primary">
           {registro.tipoProcedimento}
         </h3>
-        <dl className="mt-4 space-y-4">
+        <dl className="mt-4 flex-1 space-y-4">
           <Detalhe rotulo="Data do procedimento" valor={formatarData(registro.data)} />
           <Detalhe rotulo="Observações médicas" valor={registro.observacoesMedicas} />
         </dl>
+        <div className="mt-5 grid grid-cols-2 gap-3 border-t border-border pt-4">
+          <button type="button" onClick={() => onEditar(registro)} aria-label={`Editar ${registro.tipoProcedimento}`} className="flex min-h-11 items-center justify-center rounded-md text-sm font-semibold text-primary hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+            Editar
+          </button>
+          <button type="button" onClick={() => onDeletar(registro)} aria-label={`Deletar ${registro.tipoProcedimento}`} className="flex min-h-11 items-center justify-center rounded-md text-sm font-semibold text-destructive hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emergency">
+            Deletar
+          </button>
+        </div>
       </article>
     );
   }
 
   return (
-    <article className="min-w-0 rounded-lg border border-border bg-card p-5 shadow-soft sm:p-6">
+    <article className="flex h-full min-w-0 flex-col rounded-lg border border-border bg-card p-5 shadow-soft sm:p-6">
       <h3 className="break-words font-heading text-xl font-semibold text-primary">
         {registro.nome}
       </h3>
-      <dl className="mt-4 space-y-4">
+      <dl className="mt-4 flex-1 space-y-4">
         <Detalhe rotulo="Valor" valor={registro.valor} />
         <Detalhe rotulo="Descrição" valor={registro.descricao} />
         <Detalhe rotulo="Cadastrado em" valor={formatarData(registro.createdAt)} />
       </dl>
+      <div className="mt-5 grid grid-cols-2 gap-3 border-t border-border pt-4">
+        <button type="button" onClick={() => onEditar(registro)} aria-label={`Editar ${registro.nome}`} className="flex min-h-11 items-center justify-center rounded-md text-sm font-semibold text-primary hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+          Editar
+        </button>
+        <button type="button" onClick={() => onDeletar(registro)} aria-label={`Deletar ${registro.nome}`} className="flex min-h-11 items-center justify-center rounded-md text-sm font-semibold text-destructive hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emergency">
+          Deletar
+        </button>
+      </div>
     </article>
   );
 }
@@ -286,8 +302,16 @@ function ConteudoRegistrosClient() {
     setTentativa((atual) => atual + 1);
   }
 
-  function abrirEdicao(registro) {
-    setFormulario({
+  function abrirEdicao(categoria, registro) {
+    setFormulario(categoria === "procedimentos" ? {
+      data: registro.data?.slice(0, 10) || "",
+      tipoProcedimento: registro.tipoProcedimento || "",
+      observacoesMedicas: registro.observacoesMedicas || "",
+    } : categoria === "campos" ? {
+      nome: registro.nome || "",
+      descricao: registro.descricao || "",
+      valor: registro.valor || "",
+    } : {
       nomeMedicamento: registro.nomeMedicamento || "",
       dosagem: registro.dosagem || "",
       frequencia: registro.frequencia || "",
@@ -295,13 +319,13 @@ function ConteudoRegistrosClient() {
       inicioTratamento: registro.inicioTratamento?.slice(0, 10) || "",
       fimTratamento: registro.fimTratamento?.slice(0, 10) || "",
     });
-    setModal({ tipo: "editar", registro });
+    setModal({ tipo: "editar", categoria, registro });
     setErroAcao("");
     setAviso("");
   }
 
-  function abrirExclusao(registro) {
-    setModal({ tipo: "deletar", registro });
+  function abrirExclusao(categoria, registro) {
+    setModal({ tipo: "deletar", categoria, registro });
     setErroAcao("");
     setAviso("");
   }
@@ -321,55 +345,84 @@ function ConteudoRegistrosClient() {
     event.preventDefault();
     if (salvando || modal?.tipo !== "editar") return;
 
-    if (![formulario.nomeMedicamento, formulario.dosagem, formulario.frequencia].every((valor) => valor.trim())) {
-      setErroAcao("Preencha nome, dosagem e frequência do medicamento.");
-      return;
-    }
-    if (formulario.fimTratamento < formulario.inicioTratamento) {
-      setErroAcao("A data de término deve ser igual ou posterior à data de início.");
-      return;
-    }
+    const categoria = modal.categoria;
+    let payload;
 
-    setSalvando(true);
-    setErroAcao("");
-    try {
-      const { data } = await api.patch(`/api/usuarios/${usuarioId}/medicamentos/${modal.registro.id}`, {
+    if (categoria === "medicamentos") {
+      if (![formulario.nomeMedicamento, formulario.dosagem, formulario.frequencia].every((valor) => valor.trim())) {
+        setErroAcao("Preencha nome, dosagem e frequência do medicamento.");
+        return;
+      }
+      if (formulario.fimTratamento < formulario.inicioTratamento) {
+        setErroAcao("A data de término deve ser igual ou posterior à data de início.");
+        return;
+      }
+      payload = {
         nomeMedicamento: formulario.nomeMedicamento.trim(),
         dosagem: formulario.dosagem.trim(),
         frequencia: formulario.frequencia.trim(),
         descricao: formulario.descricao.trim(),
         inicioTratamento: `${formulario.inicioTratamento}T00:00:00`,
         fimTratamento: `${formulario.fimTratamento}T00:00:00`,
-      });
+      };
+    } else if (categoria === "procedimentos") {
+      if (!formulario.data || !formulario.tipoProcedimento.trim()) {
+        setErroAcao("Preencha a data e o tipo de procedimento.");
+        return;
+      }
+      payload = {
+        data: formulario.data,
+        tipoProcedimento: formulario.tipoProcedimento.trim(),
+        observacoesMedicas: formulario.observacoesMedicas.trim(),
+      };
+    } else {
+      if (!formulario.nome.trim()) {
+        setErroAcao("Preencha o nome do campo clínico.");
+        return;
+      }
+      payload = {
+        nome: formulario.nome.trim(),
+        descricao: formulario.descricao.trim(),
+        valor: formulario.valor.trim(),
+      };
+    }
+
+    setSalvando(true);
+    setErroAcao("");
+    try {
+      const rota = categorias.find((item) => item.id === categoria).rota;
+      const { data } = await api.patch(`/api/usuarios/${usuarioId}/${rota}/${modal.registro.id}`, payload);
       setRegistros((atuais) => ({
         ...atuais,
-        medicamentos: atuais.medicamentos.map((item) => item.id === modal.registro.id ? data : item),
+        [categoria]: atuais[categoria].map((item) => item.id === modal.registro.id ? data : item),
       }));
       setModal(null);
       setFormulario(null);
-      setAviso("Medicamento atualizado com sucesso.");
+      setAviso("Registro atualizado com sucesso.");
     } catch (error) {
-      setErroAcao(error.response?.data?.mensagem || "Não foi possível atualizar o medicamento. Tente novamente.");
+      setErroAcao(error.response?.data?.mensagem || Object.values(error.response?.data?.errors || {}).flat().join(" ") || "Não foi possível atualizar o registro. Tente novamente.");
     } finally {
       setSalvando(false);
     }
   }
 
-  async function removerMedicamento() {
+  async function removerRegistro() {
     if (salvando || modal?.tipo !== "deletar") return;
 
     setSalvando(true);
     setErroAcao("");
     try {
-      await api.delete(`/api/usuarios/${usuarioId}/medicamentos/${modal.registro.id}`);
+      const categoria = modal.categoria;
+      const rota = categorias.find((item) => item.id === categoria).rota;
+      await api.delete(`/api/usuarios/${usuarioId}/${rota}/${modal.registro.id}`);
       setRegistros((atuais) => ({
         ...atuais,
-        medicamentos: atuais.medicamentos.filter((item) => item.id !== modal.registro.id),
+        [categoria]: atuais[categoria].filter((item) => item.id !== modal.registro.id),
       }));
       setModal(null);
-      setAviso("Medicamento removido com sucesso.");
+      setAviso("Registro removido com sucesso.");
     } catch (error) {
-      setErroAcao(error.response?.data?.mensagem || "Não foi possível remover o medicamento. Tente novamente.");
+      setErroAcao(error.response?.data?.mensagem || "Não foi possível remover o registro. Tente novamente.");
     } finally {
       setSalvando(false);
     }
@@ -484,8 +537,8 @@ function ConteudoRegistrosClient() {
                         key={registro.id}
                         categoria={id}
                         registro={registro}
-                        onEditar={abrirEdicao}
-                        onDeletar={abrirExclusao}
+                        onEditar={(registro) => abrirEdicao(id, registro)}
+                        onDeletar={(registro) => abrirExclusao(id, registro)}
                       />
                     ))}
                   </div>
@@ -522,14 +575,14 @@ function ConteudoRegistrosClient() {
           <section
             role="dialog"
             aria-modal="true"
-            aria-labelledby="acao-medicamento-titulo"
+            aria-labelledby="acao-registro-titulo"
             className="max-h-[95dvh] w-full overflow-y-auto rounded-t-lg bg-card p-5 shadow-modal sm:max-h-[90dvh] sm:max-w-xl sm:rounded-lg sm:p-7"
           >
             <div className="flex items-start justify-between gap-4">
               <div>
-                <p className="text-sm font-semibold text-emergency">Medicamentos</p>
-                <h2 id="acao-medicamento-titulo" className="mt-1 font-heading text-2xl font-semibold text-primary">
-                  {modal.tipo === "editar" ? "Editar medicamento" : "Deletar medicamento"}
+                <p className="text-sm font-semibold text-emergency">{categorias.find((item) => item.id === modal.categoria).titulo}</p>
+                <h2 id="acao-registro-titulo" className="mt-1 font-heading text-2xl font-semibold text-primary">
+                  {modal.tipo === "editar" ? "Editar registro" : "Deletar registro"}
                 </h2>
               </div>
               <Button type="button" variant="ghost" size="icon" aria-label="Fechar" disabled={salvando} onClick={fecharModal} className="size-11 shrink-0 !text-destructive hover:!bg-destructive/10 hover:!text-destructive [&_svg]:!size-7">
@@ -539,16 +592,32 @@ function ConteudoRegistrosClient() {
 
             {modal.tipo === "editar" ? (
               <form onSubmit={salvarEdicao} className="mt-6 space-y-4">
-                <CampoEdicao rotulo="Nome do medicamento" nome="nomeMedicamento" valor={formulario.nomeMedicamento} aoAlterar={atualizarCampo} required autoFocus />
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <CampoEdicao rotulo="Dosagem" nome="dosagem" valor={formulario.dosagem} aoAlterar={atualizarCampo} required />
-                  <CampoEdicao rotulo="Frequência" nome="frequencia" valor={formulario.frequencia} aoAlterar={atualizarCampo} required />
-                </div>
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <CampoEdicao rotulo="Início do tratamento" nome="inicioTratamento" tipo="date" valor={formulario.inicioTratamento} aoAlterar={atualizarCampo} required />
-                  <CampoEdicao rotulo="Fim do tratamento" nome="fimTratamento" tipo="date" valor={formulario.fimTratamento} aoAlterar={atualizarCampo} min={formulario.inicioTratamento} required />
-                </div>
-                <CampoEdicao rotulo="Descrição (opcional)" nome="descricao" valor={formulario.descricao} aoAlterar={atualizarCampo} multilinha />
+                {modal.categoria === "medicamentos" ? (
+                  <>
+                    <CampoEdicao rotulo="Nome do medicamento" nome="nomeMedicamento" valor={formulario.nomeMedicamento} aoAlterar={atualizarCampo} required autoFocus />
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      <CampoEdicao rotulo="Dosagem" nome="dosagem" valor={formulario.dosagem} aoAlterar={atualizarCampo} required />
+                      <CampoEdicao rotulo="Frequência" nome="frequencia" valor={formulario.frequencia} aoAlterar={atualizarCampo} required />
+                    </div>
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      <CampoEdicao rotulo="Início do tratamento" nome="inicioTratamento" tipo="date" valor={formulario.inicioTratamento} aoAlterar={atualizarCampo} required />
+                      <CampoEdicao rotulo="Fim do tratamento" nome="fimTratamento" tipo="date" valor={formulario.fimTratamento} aoAlterar={atualizarCampo} min={formulario.inicioTratamento} required />
+                    </div>
+                    <CampoEdicao rotulo="Descrição (opcional)" nome="descricao" valor={formulario.descricao} aoAlterar={atualizarCampo} multilinha />
+                  </>
+                ) : modal.categoria === "procedimentos" ? (
+                  <>
+                    <CampoEdicao rotulo="Tipo de procedimento" nome="tipoProcedimento" valor={formulario.tipoProcedimento} aoAlterar={atualizarCampo} maxLength={200} required autoFocus />
+                    <CampoEdicao rotulo="Data do procedimento" nome="data" tipo="date" valor={formulario.data} aoAlterar={atualizarCampo} required />
+                    <CampoEdicao rotulo="Observações médicas (opcional)" nome="observacoesMedicas" valor={formulario.observacoesMedicas} aoAlterar={atualizarCampo} maxLength={5000} multilinha />
+                  </>
+                ) : (
+                  <>
+                    <CampoEdicao rotulo="Nome do campo" nome="nome" valor={formulario.nome} aoAlterar={atualizarCampo} maxLength={100} required autoFocus />
+                    <CampoEdicao rotulo="Valor (opcional)" nome="valor" valor={formulario.valor} aoAlterar={atualizarCampo} maxLength={5000} multilinha />
+                    <CampoEdicao rotulo="Descrição (opcional)" nome="descricao" valor={formulario.descricao} aoAlterar={atualizarCampo} maxLength={500} multilinha />
+                  </>
+                )}
                 {erroAcao && <p role="alert" className="rounded-lg bg-emergency-soft px-4 py-3 text-sm text-emergency">{erroAcao}</p>}
                 <div className="flex flex-col-reverse gap-3 pt-2 sm:flex-row sm:justify-end">
                   <Button type="button" variant="outline" onClick={fecharModal} disabled={salvando} className="min-h-12 w-full sm:w-auto">Cancelar</Button>
@@ -558,13 +627,13 @@ function ConteudoRegistrosClient() {
             ) : (
               <div className="mt-6">
                 <p className="break-words text-sm leading-6 text-foreground">
-                  Deseja deletar <strong>{modal.registro.nomeMedicamento}</strong>? Esta ação não pode ser desfeita.
+                  Deseja deletar <strong>{modal.registro.nomeMedicamento || modal.registro.tipoProcedimento || modal.registro.nome}</strong>? Esta ação não pode ser desfeita.
                 </p>
                 {erroAcao && <p role="alert" className="mt-4 rounded-lg bg-emergency-soft px-4 py-3 text-sm text-emergency">{erroAcao}</p>}
                 <div className="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
                   <Button type="button" variant="outline" onClick={fecharModal} disabled={salvando} autoFocus className="min-h-12 w-full sm:w-auto">Cancelar</Button>
-                  <Button type="button" variant="destructive" onClick={removerMedicamento} disabled={salvando} className="min-h-12 w-full sm:w-auto">
-                    {salvando ? "Deletando..." : "Deletar medicamento"}
+                  <Button type="button" variant="destructive" onClick={removerRegistro} disabled={salvando} className="min-h-12 w-full sm:w-auto">
+                    {salvando ? "Deletando..." : "Deletar registro"}
                   </Button>
                 </div>
               </div>

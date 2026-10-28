@@ -66,6 +66,77 @@ public class ProcedimentosCirurgicosController(AppDbContext context) : UsuarioCo
         );
     }
 
+    [HttpPatch("{id:int}")]
+    public async Task<ActionResult<ProcedimentoCirurgicoResposta>> atualizar(
+        int usuarioId,
+        int id,
+        atualizarProcedimentoCirurgico dto)
+    {
+        if (!usuarioTemAcesso(usuarioId))
+        {
+            return Forbid();
+        }
+
+        var procedimento = await context.procedimentosCirurgicos
+            .FirstOrDefaultAsync(procedimento => procedimento.id == id
+                && procedimento.usuarioId == usuarioId);
+
+        if (procedimento is null)
+        {
+            return NotFound(new { mensagem = "Procedimento cirúrgico não encontrado." });
+        }
+
+        if (dto.data == DateOnly.MinValue)
+        {
+            return BadRequest(new { mensagem = "Informe uma data válida para o procedimento." });
+        }
+
+        if (dto.tipoProcedimento is not null && string.IsNullOrWhiteSpace(dto.tipoProcedimento))
+        {
+            return BadRequest(new { mensagem = "Informe o tipo de procedimento." });
+        }
+
+        if (dto.data.HasValue)
+        {
+            procedimento.data = dto.data.Value;
+        }
+
+        if (dto.tipoProcedimento is not null)
+        {
+            procedimento.tipoProcedimento = dto.tipoProcedimento.Trim();
+        }
+
+        if (dto.observacoesMedicas is not null)
+        {
+            procedimento.observacoesMedicas = dto.observacoesMedicas.Trim();
+        }
+
+        await context.SaveChangesAsync();
+        return Ok(criarResposta(procedimento));
+    }
+
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> excluir(int usuarioId, int id)
+    {
+        if (!usuarioTemAcesso(usuarioId))
+        {
+            return Forbid();
+        }
+
+        var procedimento = await context.procedimentosCirurgicos
+            .FirstOrDefaultAsync(procedimento => procedimento.id == id
+                && procedimento.usuarioId == usuarioId);
+
+        if (procedimento is null)
+        {
+            return NotFound(new { mensagem = "Procedimento cirúrgico não encontrado." });
+        }
+
+        context.procedimentosCirurgicos.Remove(procedimento);
+        await context.SaveChangesAsync();
+        return NoContent();
+    }
+
     [HttpGet]
     public async Task<ActionResult<IEnumerable<ProcedimentoCirurgicoResposta>>> listar(int usuarioId)
     {
