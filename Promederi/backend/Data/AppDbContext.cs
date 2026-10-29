@@ -15,6 +15,21 @@ namespace backend.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<Cliente>(entity =>
+            {
+                entity.ToTable("Clientes");
+                entity.Property(c => c.Nome).HasMaxLength(200).IsRequired();
+                entity.Property(c => c.NumeroTelefone).HasMaxLength(30).IsRequired();
+                entity.Property(c => c.Cidade).HasMaxLength(120).IsRequired();
+                entity.Property(c => c.Endereco).HasMaxLength(500).IsRequired();
+                entity.Property(c => c.Descricao).HasMaxLength(2000).IsRequired();
+                entity.Property(c => c.Peso).HasPrecision(6, 2);
+                entity.Property(c => c.Altura).HasPrecision(5, 2);
+                entity.HasOne(c => c.Usuario).WithOne(u => u.PerfilCliente)
+                    .HasForeignKey<Cliente>(c => c.UsuarioId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
+
             modelBuilder.Entity<Cuidadores>(entity =>
             {
                 entity.ToTable("Cuidadores");
@@ -72,6 +87,7 @@ namespace backend.Data
 
 
         public DbSet<Usuario> usuarios { get; set; } // transforma a classe Usuario em uma tabela do banco de dados
+        public DbSet<Cliente> clientes { get; set; }
         public DbSet<Cuidadores> cuidadores { get; set; }
         public DbSet<CampoClinico> camposClinicos { get; set; }
         public DbSet<ProcedimentoCirurgico> procedimentosCirurgicos { get; set; }

@@ -11,6 +11,7 @@ import { AnotacoesCaregiver } from "./pages/caregiver/AnotacoesCaregiver.jsx";
 import { Login } from "./pages/Login.jsx";
 import { Cadastro } from "./pages/Cadastro.jsx";
 import { LandingPage } from "./pages/LandingPage.jsx";
+import { PerfilClient } from "./pages/client/PerfilClient.jsx";
 
 export default function App() {
   return (
@@ -18,6 +19,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/HomeClient" element={<HomeClient />} />
+        <Route path="/PerfilClient" element={<PerfilClient />} />
         <Route path="/RegistrosClient" element={<RegistrosClient />} />
         <Route path="/CuidadoresClient" element={<CuidadoresClient />} />
         <Route path="/IAClient" element={<IAClient />} />

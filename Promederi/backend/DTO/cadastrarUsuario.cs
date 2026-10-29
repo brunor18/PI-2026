@@ -5,6 +5,7 @@ namespace backend.DTO
     public class cadastrarUsuario : IValidatableObject
     {
         [Required]
+        [MaxLength(200)]
         public string nome { get; set; } = string.Empty;
 
         [Required]
@@ -21,6 +22,7 @@ namespace backend.DTO
         public string PIN { get; set; }
 
         [Required]
+        [MaxLength(30)]
         public string numeroTelefone { get; set; } = string.Empty;
 
         [Range(1, 2, ErrorMessage = "O tipo de usuário deve ser 1 (Idoso) ou 2 (Cuidador).")]

@@ -79,6 +79,15 @@ namespace Promederi.Controllers
                 };
             }
 
+            else if (usuario.TipoUsuario == TipoUsuario.Idoso)
+            {
+                usuario.PerfilCliente = new Cliente
+                {
+                    Nome = usuario.nome,
+                    NumeroTelefone = usuario.numeroTelefone,
+                };
+            }
+
             // Um único SaveChanges persiste usuário e perfil na mesma transação.
             _context.usuarios.Add(usuario);
 
@@ -167,6 +176,7 @@ namespace Promederi.Controllers
                     id = usuario.Id,
                     nome = usuario.nome,
                     email = usuario.email,
+                    perfilCompleto = await PerfilClienteCompleto(usuario),
                     tipoUsuario = usuario.TipoUsuario,
                     idosoId = usuario.IdosoId
                 }
@@ -260,9 +270,18 @@ namespace Promederi.Controllers
                 {
                     id = usuario.Id,
                     nome = usuario.nome,
-                    email = usuario.email
+                    email = usuario.email,
+                    tipoUsuario = usuario.TipoUsuario,
+                    perfilCompleto = await PerfilClienteCompleto(usuario)
                 }
             });
+        }
+
+        private async Task<bool> PerfilClienteCompleto(Usuario usuario)
+        {
+            return usuario.TipoUsuario != TipoUsuario.Idoso || await _context.clientes.AnyAsync(c =>
+                c.UsuarioId == usuario.Id && c.Idade != null && c.Peso != null && c.Altura != null
+                && c.Cidade != "" && c.Endereco != "" && c.Descricao != "" && c.Nome != "" && c.NumeroTelefone != "");
         }
 
         // Um hash inválido deve rejeitar a autenticação, sem gerar erro 500.

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { BookOpenText, Bot, ClipboardList, HeartPulse, Menu, Users, X } from "lucide-react";
+import { BookOpenText, Bot, ClipboardList, HeartPulse, Menu, UserRound, Users, X } from "lucide-react";
 import { BrandLogo } from "./BrandLogo";
 import { Button } from "./ui/button";
 import api from "@/services/api.service";
@@ -11,6 +11,7 @@ const links = [
   { to: "/CuidadoresClient", label: "Cuidadores", icon: Users },
   { to: "/AnotacoesClient", label: "Anotações", icon: BookOpenText },
   { to: "/IAClient", label: "IA de saúde", icon: Bot },
+  { to: "/PerfilClient", label: "Perfil", icon: UserRound },
 ];
 
 function obterNomeUsuario() {
@@ -37,7 +38,7 @@ function IdentidadeUsuario({ nome, className = "" }) {
 
 export function NavBarClient() {
   const [open, setOpen] = useState(false);
-  const [nomeUsuario] = useState(obterNomeUsuario);
+  const nomeUsuario = obterNomeUsuario();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -52,13 +53,13 @@ export function NavBarClient() {
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-card/95 backdrop-blur-md">
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
-        <div className="flex min-w-0 items-center gap-8">
+        <div className="flex min-w-0 items-center gap-5">
           {location.pathname === "/HomeClient" ? (
             <span className="shrink-0"><BrandLogo /></span>
           ) : (
             <Link to="/HomeClient" aria-label="Promedéri — início" className="shrink-0"><BrandLogo /></Link>
           )}
-          <nav aria-label="Navegação do cliente" className="hidden items-center gap-6 xl:flex">
+          <nav aria-label="Navegação do cliente" className="hidden items-center gap-4 xl:flex">
             {links.map(({ to, label, icon: Icon }) => (
               <Link
                 key={to}

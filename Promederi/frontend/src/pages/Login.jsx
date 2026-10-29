@@ -45,7 +45,7 @@ export function Login() {
         destino = "/HomeCaregiver";
         break;
       case 1:
-        destino = "/HomeClient";
+        destino = dados.usuario.perfilCompleto === false ? "/PerfilClient" : "/HomeClient";
         break;
       default:
         throw new Error("Tipo de usuário inválido. Não foi possível entrar.");
@@ -132,7 +132,10 @@ export function Login() {
     "mt-2 min-h-12 w-full rounded-lg border border-input bg-background px-4 text-xl outline-none focus:border-primary focus:ring-2 focus:ring-primary/15";
 
   const destinoDaSessao = obterDestinoDaSessao();
-  if (destinoDaSessao) return <Navigate to={destinoDaSessao} replace />;
+  if (destinoDaSessao) {
+    const usuario = JSON.parse(sessionStorage.getItem("usuario"));
+    return <Navigate to={destinoDaSessao === "/HomeClient" && usuario.perfilCompleto === false ? "/PerfilClient" : destinoDaSessao} replace />;
+  }
 
   return (
     <main className="grid min-h-screen place-items-center bg-background p-4">

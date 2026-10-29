@@ -18,6 +18,8 @@ namespace backend.Models
 
         public TipoUsuario TipoUsuario { get; set; }
 
+        public Cliente? PerfilCliente { get; set; }
+
         public Cuidadores? PerfilCuidador { get; set; }
         public ICollection<Cuidadores> CuidadoresAtendentes { get; set; } = new List<Cuidadores>();
 

@@ -1,49 +1,49 @@
-import React from "react";
-const _jsxFileName = "";import { Bot, CheckCircle2, Clock3, UserRoundCheck, Users } from "lucide-react";
-import { Link } from "react-router-dom";
-import helenaPhoto from "@/assets/helena-soares.jpg";
-import { NavBarCaregiver } from "@/components/NavBarCaregiver";
+import { Link, Navigate } from "react-router-dom";
+import { ArrowRight, Search, UserRound, Users } from "lucide-react";
+import { NavBarCaregiver } from "@/components/navbarCaregiver";
 import { Button } from "@/components/ui/button";
+import { obterDestinoDaSessao } from "@/lib/session";
+
+const acoes = [
+  { titulo: "Meus clientes", descricao: "Acesse seus clientes e acompanhe as informações e anotações de cada atendimento.", acao: "Ver meus clientes", rota: "/ClientesCaregiver", icon: Users },
+  { titulo: "Procurar um cliente", descricao: "Encontre um cliente pelo nome para consultar seu acompanhamento com mais facilidade.", acao: "Procurar cliente", rota: "/ClientesCaregiver?buscar=1", icon: Search },
+  { titulo: "Meu perfil", descricao: "Acesse sua apresentação e as informações profissionais do seu perfil de cuidador.", acao: "Ver meu perfil", rota: "/PerfilCaregiver", icon: UserRound },
+];
 
 export function HomeCaregiver() {
+  const destino = obterDestinoDaSessao();
+  if (!destino) return <Navigate to="/login" replace />;
+  if (destino !== "/HomeCaregiver") return <Navigate to={destino} replace />;
+
+  const usuario = JSON.parse(sessionStorage.getItem("usuario"));
+  const primeiroNome = usuario.nome?.trim().split(/\s+/)[0] || "cuidador";
+
   return (
-    React.createElement('div', { className: "min-h-screen bg-background" , __self: this, __source: {fileName: _jsxFileName, lineNumber: 9}}
-      , React.createElement(NavBarCaregiver, {__self: this, __source: {fileName: _jsxFileName, lineNumber: 10}} )
-      , React.createElement('main', { className: "mx-auto max-w-7xl px-5 py-10 lg:px-8"    , __self: this, __source: {fileName: _jsxFileName, lineNumber: 11}}
-        , React.createElement('p', { className: "text-sm font-semibold text-emergency"  , __self: this, __source: {fileName: _jsxFileName, lineNumber: 12}}, "PLANTÃO EM ANDAMENTO"  )
-        , React.createElement('h1', { className: "mt-2 font-heading text-4xl font-semibold text-primary"    , __self: this, __source: {fileName: _jsxFileName, lineNumber: 13}}, "Bom dia, Luciana."  )
-        , React.createElement('p', { className: "mt-2 max-w-2xl text-muted-foreground"  , __self: this, __source: {fileName: _jsxFileName, lineNumber: 14}}, "Sua prioridade agora é acompanhar Helena, registrar observações por cliente e manter a família atualizada."              )
+    <div className="min-h-screen bg-background">
+      <NavBarCaregiver />
+      <main className="mx-auto max-w-7xl px-4 pb-16 pt-8 sm:px-6 sm:pt-10 lg:px-8 lg:pt-12">
+        <header className="border-b border-border pb-8 sm:pb-10">
+          <h1 className="mt-2 font-heading text-3xl font-semibold leading-tight text-primary sm:text-5xl">Boas-vindas, {primeiroNome}!</h1>
+          <p className="mt-3 max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg">Organize seu acompanhamento em um só lugar. Acesse seus clientes, encontre um atendimento ou consulte seu perfil.</p>
+        </header>
 
-        , React.createElement('div', { className: "mt-8 grid gap-6 lg:grid-cols-[1fr_1.6fr]"   , __self: this, __source: {fileName: _jsxFileName, lineNumber: 16}}
-          , React.createElement('section', { className: "rounded-lg border border-border bg-card p-7 shadow-soft"     , __self: this, __source: {fileName: _jsxFileName, lineNumber: 17}}
-            , React.createElement('img', { src: helenaPhoto, alt: "Helena Soares" , width: 816, height: 816, className: "size-24 rounded-full object-cover"  , __self: this, __source: {fileName: _jsxFileName, lineNumber: 18}} )
-            , React.createElement('h2', { className: "mt-4 font-heading text-2xl font-semibold text-primary"    , __self: this, __source: {fileName: _jsxFileName, lineNumber: 19}}, "Helena Soares" )
-            , React.createElement('p', { className: "text-sm text-muted-foreground" , __self: this, __source: {fileName: _jsxFileName, lineNumber: 20}}, "Plantão das 08h às 18h"    )
-            , React.createElement('div', { className: "mt-6 grid gap-3"  , __self: this, __source: {fileName: _jsxFileName, lineNumber: 21}}
-              , React.createElement(Button, { className: "w-full", __self: this, __source: {fileName: _jsxFileName, lineNumber: 22}}, React.createElement(UserRoundCheck, { className: "size-5", __self: this, __source: {fileName: _jsxFileName, lineNumber: 22}} ), " Registrar check-in"  )
-              , React.createElement(Button, { asChild: true, variant: "secondary", className: "w-full", __self: this, __source: {fileName: _jsxFileName, lineNumber: 23}}
-                , React.createElement(Link, { to: "/ClientesCaregiver", __self: this, __source: {fileName: _jsxFileName, lineNumber: 24}}, React.createElement(Users, { className: "size-5", __self: this, __source: {fileName: _jsxFileName, lineNumber: 24}} ), " Ver cliente e anotações"    )
-              )
-              , React.createElement(Button, { asChild: true, variant: "secondary", className: "w-full", __self: this, __source: {fileName: _jsxFileName, lineNumber: 26}}
-                , React.createElement(Link, { to: "/ClientesCaregiver", __self: this, __source: {fileName: _jsxFileName, lineNumber: 27}}, React.createElement(Bot, { className: "size-5", __self: this, __source: {fileName: _jsxFileName, lineNumber: 27}} ), " Usar IA contratada"   )
-              )
-            )
-          )
-
-          , React.createElement('section', { className: "rounded-lg border border-border bg-card p-7 shadow-soft"     , __self: this, __source: {fileName: _jsxFileName, lineNumber: 32}}
-            , React.createElement('h2', { className: "font-heading text-2xl font-semibold text-primary"   , __self: this, __source: {fileName: _jsxFileName, lineNumber: 33}}, "Próximos cuidados" )
-            , React.createElement('div', { className: "mt-6 space-y-3" , __self: this, __source: {fileName: _jsxFileName, lineNumber: 34}}
-              , React.createElement(CareTask, { icon: CheckCircle2, time: "08:00", title: "Losartana 50 mg"  , done: true, __self: this, __source: {fileName: _jsxFileName, lineNumber: 35}} )
-              , React.createElement(CareTask, { icon: Clock3, time: "10:30", title: "Hidratação", __self: this, __source: {fileName: _jsxFileName, lineNumber: 36}} )
-              , React.createElement(CareTask, { icon: Clock3, time: "13:30", title: "Caminhada assistida" , __self: this, __source: {fileName: _jsxFileName, lineNumber: 37}} )
-            )
-          )
-        )
-      )
-    )
+        <section aria-labelledby="acoes-cuidador-titulo" className="pt-8 sm:pt-10">
+          <div className="mb-5">
+            <h2 id="acoes-cuidador-titulo" className="font-heading text-2xl font-semibold text-primary sm:text-3xl">Como deseja começar?</h2>
+            <p className="mt-2 text-sm leading-6 text-muted-foreground sm:text-base">Escolha uma opção para continuar sua rotina de cuidado.</p>
+          </div>
+          <div className="grid gap-4 md:grid-cols-3 lg:gap-6">
+            {acoes.map(({ titulo, descricao, acao, rota, icon: Icon }) => (
+              <article key={titulo} className="flex min-w-0 flex-col rounded-lg border border-border bg-card p-5 shadow-soft sm:p-6">
+                <span className="grid size-12 place-items-center rounded-lg bg-muted text-primary"><Icon aria-hidden="true" className="size-6" /></span>
+                <h3 className="mt-5 font-heading text-xl font-semibold text-primary">{titulo}</h3>
+                <p className="mt-2 flex-1 text-sm leading-6 text-muted-foreground">{descricao}</p>
+                <Button asChild className="mt-6 min-h-12 w-full justify-between px-4 text-sm sm:text-base"><Link to={rota}><span>{acao}</span><ArrowRight aria-hidden="true" className="size-4" /></Link></Button>
+              </article>
+            ))}
+          </div>
+        </section>
+      </main>
+    </div>
   );
-}
-
-function CareTask({ icon: Icon, time, title, done = false }) {
-  return React.createElement('div', { className: "grid min-h-16 grid-cols-[auto_3.5rem_minmax(0,1fr)_auto] items-center gap-4 rounded-lg bg-background p-4"       , __self: this, __source: {fileName: _jsxFileName, lineNumber: 47}}, React.createElement(Icon, { className: done ? "size-5 text-success" : "size-5 text-emergency", __self: this, __source: {fileName: _jsxFileName, lineNumber: 47}} ), React.createElement('span', { className: "text-sm font-semibold text-muted-foreground"  , __self: this, __source: {fileName: _jsxFileName, lineNumber: 47}}, time), React.createElement('span', { className: "min-w-0 truncate font-medium text-primary"   , __self: this, __source: {fileName: _jsxFileName, lineNumber: 47}}, title), React.createElement('span', { className: "text-xs text-muted-foreground" , __self: this, __source: {fileName: _jsxFileName, lineNumber: 47}}, done ? "Concluído" : "Pendente"));
 }

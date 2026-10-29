@@ -1,21 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import { Navigate } from "react-router-dom";
-import { MapPin, MessageCircle, RotateCcw, Search, Users, X } from "lucide-react";
+import { MapPin, RotateCcw, Search, Users, X } from "lucide-react";
 import { NavBarClient } from "@/components/navbarClient";
 import { Button } from "@/components/ui/button";
 import api from "@/services/api.service";
 import { obterDestinoDaSessao } from "@/lib/session";
 import { obterLinkWhatsApp, resumirDescricao } from "@/lib/cuidadores";
+import { BotaoContato } from "@/components/BotaoContato";
 
 function normalizar(valor) {
   return String(valor ?? "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLocaleLowerCase("pt-BR").trim();
-}
-
-function BotaoContato({ telefone }) {
-  const href = obterLinkWhatsApp(telefone);
-  return href ? (
-    <Button asChild className="min-h-12 w-full"><a href={href} target="_blank" rel="noopener noreferrer"><MessageCircle aria-hidden="true" />Entrar em contato<span className="sr-only"> pelo WhatsApp (abre em nova aba)</span></a></Button>
-  ) : <Button disabled className="min-h-12 w-full" title="Telefone não informado ou inválido"><MessageCircle aria-hidden="true" />Entrar em contato</Button>;
 }
 
 function DetalhesCuidador({ cuidador, aoFechar }) {

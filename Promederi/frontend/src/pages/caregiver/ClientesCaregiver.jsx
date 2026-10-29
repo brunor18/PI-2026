@@ -5,6 +5,8 @@ import { PageIntro } from "../client/CuidadoresClient";
 import { useState } from "react";
 import { Bot, ClipboardCheck, Plus, Send, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useSearchParams } from "react-router-dom";
+import { PesquisarClientesCaregiver } from "./PesquisarClientesCaregiver";
 
 const clients = [
   {
@@ -35,7 +37,14 @@ const clients = [
 const defaultClient = clients[0];
 
 export function ClientesCaregiver() {
-  const [selectedClient, setSelectedClient] = useState(defaultClient.name);
+  const [searchParams] = useSearchParams();
+  return searchParams.get("buscar") === "1" ? <PesquisarClientesCaregiver /> : <MeusClientesCaregiver />;
+}
+
+function MeusClientesCaregiver() {
+  const [searchParams] = useSearchParams();
+  const clientesVisiveis = clients;
+  const [selectedClient, setSelectedClient] = useState(searchParams.get("cliente") || defaultClient.name);
   const [aiMessage, setAiMessage] = useState("");
   const [aiSent, setAiSent] = useState(false);
   const [noteOpen, setNoteOpen] = useState(false);
@@ -51,13 +60,14 @@ export function ClientesCaregiver() {
     return groups;
   }, {});
 
+
   return (
     React.createElement('div', { className: "min-h-screen bg-background" , __self: this, __source: {fileName: _jsxFileName, lineNumber: 56}}
       , React.createElement(NavBarCaregiver, {__self: this, __source: {fileName: _jsxFileName, lineNumber: 57}} )
-      , React.createElement(PageIntro, { eyebrow: "Pessoas acompanhadas" , title: "Clientes e anotações"  , text: "Consulte cada cliente, registre observações separadas e acesse a IA quando o plano permitir."             , __self: this, __source: {fileName: _jsxFileName, lineNumber: 58}} )
+      , React.createElement(PageIntro, { eyebrow: "Pessoas acompanhadas" , title: "Meus clientes", text: "Consulte cada cliente, registre observações separadas e acesse a IA quando o plano permitir." })
       , React.createElement('main', { className: "mx-auto grid max-w-7xl gap-6 px-5 pb-16 lg:grid-cols-[20rem_minmax(0,1fr)] lg:px-8"       , __self: this, __source: {fileName: _jsxFileName, lineNumber: 59}}
         , React.createElement('aside', { className: "space-y-3", __self: this, __source: {fileName: _jsxFileName, lineNumber: 60}}
-          , clients.map((item) => (
+          , clientesVisiveis.map((item) => (
             React.createElement(Button, {
               key: item.name,
               type: "button",
