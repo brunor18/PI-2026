@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { ArrowLeft, Eye, EyeOff } from "lucide-react";
 import { BrandLogo } from "@/components/BrandLogo";
 import { Button } from "@/components/ui/button";
 import api from "../services/api.service";
+import { obterDestinoDaSessao } from "@/lib/session";
 
 export function Login() {
   const navigate = useNavigate();
@@ -129,6 +130,9 @@ export function Login() {
 
   const inputClassName =
     "mt-2 min-h-12 w-full rounded-lg border border-input bg-background px-4 text-xl outline-none focus:border-primary focus:ring-2 focus:ring-primary/15";
+
+  const destinoDaSessao = obterDestinoDaSessao();
+  if (destinoDaSessao) return <Navigate to={destinoDaSessao} replace />;
 
   return (
     <main className="grid min-h-screen place-items-center bg-background p-4">

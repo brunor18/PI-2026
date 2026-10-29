@@ -13,6 +13,10 @@ const dadosIniciais = {
   confirmarSenha: "",
   PIN: "",
   tipoUsuario: 1,
+  idade: "",
+  endereco: "",
+  numero: "",
+  descricao: "",
 };
 
 const campos = [
@@ -54,6 +58,14 @@ export function Cadastro() {
       return;
     }
 
+    if (dados.tipoUsuario === 2 && (
+      !Number.isInteger(Number(dados.idade)) || Number(dados.idade) < 18 || Number(dados.idade) > 120 ||
+      !dados.endereco.trim() || !dados.numero.trim() || !dados.descricao.trim() || dados.nome.trim().length > 200
+    )) {
+      setErro("Informe nome com até 200 caracteres, idade entre 18 e 120 anos, endereço, número e descrição do cuidador.");
+      return;
+    }
+
     setCarregando(true);
     try {
       const response = await api.post("/api/auth/cadastro", {
@@ -63,6 +75,12 @@ export function Cadastro() {
         senha: dados.senha,
         PIN: dados.PIN,
         tipoUsuario: dados.tipoUsuario,
+        ...(dados.tipoUsuario === 2 ? {
+          idade: Number(dados.idade),
+          endereco: dados.endereco.trim(),
+          numero: dados.numero.trim(),
+          descricao: dados.descricao.trim(),
+        } : {}),
       });
 
       if (response.status !== 201) {
@@ -188,6 +206,27 @@ export function Cadastro() {
                   </div>
                 );
               })}
+              {dados.tipoUsuario === 2 && (
+                <fieldset className="space-y-3 rounded-lg border border-border p-4">
+                  <legend className="px-2 text-lg font-semibold text-primary">Perfil do cuidador</legend>
+                  <label className="block text-lg font-medium text-foreground" htmlFor="cadastro-idade">
+                    Idade
+                    <input id="cadastro-idade" name="idade" type="number" min={18} max={120} step={1} required disabled={carregando} value={dados.idade} onChange={(event) => atualizarCampo("idade", event.target.value)} className="mt-2 min-h-12 w-full rounded-lg border border-input bg-background px-4 text-lg outline-none focus:border-primary focus:ring-2 focus:ring-primary/15" />
+                  </label>
+                  <label className="block text-lg font-medium text-foreground" htmlFor="cadastro-endereco">
+                    Endereço
+                    <input id="cadastro-endereco" name="endereco" type="text" autoComplete="street-address" maxLength={500} required disabled={carregando} value={dados.endereco} onChange={(event) => atualizarCampo("endereco", event.target.value)} className="mt-2 min-h-12 w-full rounded-lg border border-input bg-background px-4 text-lg outline-none focus:border-primary focus:ring-2 focus:ring-primary/15" />
+                  </label>
+                  <label className="block text-lg font-medium text-foreground" htmlFor="cadastro-numero">
+                    Número
+                    <input id="cadastro-numero" name="numero" type="text" maxLength={20} required disabled={carregando} value={dados.numero} onChange={(event) => atualizarCampo("numero", event.target.value)} placeholder="Ex.: 123, 123A ou S/N" className="mt-2 min-h-12 w-full rounded-lg border border-input bg-background px-4 text-lg outline-none focus:border-primary focus:ring-2 focus:ring-primary/15" />
+                  </label>
+                  <label className="block text-lg font-medium text-foreground" htmlFor="cadastro-descricao">
+                    Descrição
+                    <textarea id="cadastro-descricao" name="descricao" maxLength={2000} required disabled={carregando} value={dados.descricao} onChange={(event) => atualizarCampo("descricao", event.target.value)} placeholder="Conte sobre sua experiência e os cuidados que oferece." className="mt-2 min-h-24 w-full resize-y rounded-lg border border-input bg-background px-4 py-3 text-lg outline-none focus:border-primary focus:ring-2 focus:ring-primary/15" />
+                  </label>
+                </fieldset>
+              )}
               {erro && <p role="alert" className="text-lg leading-relaxed text-destructive">{erro}</p>}
               <Button type="submit" disabled={carregando} className="min-h-12 w-full text-lg font-semibold">
                 {carregando ? "Cadastrando..." : "Criar conta"}

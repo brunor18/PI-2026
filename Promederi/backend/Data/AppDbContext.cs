@@ -1,4 +1,4 @@
-﻿using backend.Models;
+using backend.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace backend.Data
@@ -14,6 +14,24 @@ namespace backend.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Cuidadores>(entity =>
+            {
+                entity.ToTable("Cuidadores");
+                entity.Property(c => c.Nome).HasMaxLength(200).IsRequired();
+                entity.Property(c => c.Numero).HasMaxLength(20).IsRequired();
+                entity.Property(c => c.Endereco).HasMaxLength(500).IsRequired();
+                entity.Property(c => c.Descricao).HasMaxLength(2000).IsRequired();
+                entity.HasOne(c => c.Usuario).WithOne(u => u.PerfilCuidador)
+                    .HasForeignKey<Cuidadores>(c => c.UsuarioId)
+                    .OnDelete(DeleteBehavior.Cascade);
+                entity.HasMany(c => c.Idosos).WithMany(u => u.CuidadoresAtendentes)
+                    .UsingEntity<Dictionary<string, object>>(
+                        "CuidadoresIdosos",
+                        j => j.HasOne<Usuario>().WithMany().HasForeignKey("IdosoId").OnDelete(DeleteBehavior.Cascade),
+                        j => j.HasOne<Cuidadores>().WithMany().HasForeignKey("CuidadorId").OnDelete(DeleteBehavior.Cascade),
+                        j => j.HasKey("CuidadorId", "IdosoId"));
+            });
 
             modelBuilder.Entity<ProcedimentoCirurgico>(entity =>
             {
@@ -54,6 +72,7 @@ namespace backend.Data
 
 
         public DbSet<Usuario> usuarios { get; set; } // transforma a classe Usuario em uma tabela do banco de dados
+        public DbSet<Cuidadores> cuidadores { get; set; }
         public DbSet<CampoClinico> camposClinicos { get; set; }
         public DbSet<ProcedimentoCirurgico> procedimentosCirurgicos { get; set; }
         public DbSet<Medicamento> medicamentos { get; set; } // transforma a classe Medicamentos em uma tabela do banco de dados

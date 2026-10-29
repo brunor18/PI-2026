@@ -67,6 +67,19 @@ namespace Promederi.Controllers
                 UltimaAutenticacaoSenha = null
             };
 
+            if (usuario.TipoUsuario == TipoUsuario.Cuidador)
+            {
+                usuario.PerfilCuidador = new Cuidadores
+                {
+                    Nome = usuario.nome,
+                    Idade = dto.idade,
+                    Endereco = dto.endereco!.Trim(),
+                    Numero = dto.numero!.Trim(),
+                    Descricao = dto.descricao!.Trim(),
+                };
+            }
+
+            // Um único SaveChanges persiste usuário e perfil na mesma transação.
             _context.usuarios.Add(usuario);
 
             await _context.SaveChangesAsync();

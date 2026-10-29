@@ -1,4 +1,4 @@
-﻿namespace backend.Models
+namespace backend.Models
 {
     public class Usuario
     {
@@ -17,6 +17,9 @@
         public DateTime? UltimaAutenticacaoSenha { get; set; }
 
         public TipoUsuario TipoUsuario { get; set; }
+
+        public Cuidadores? PerfilCuidador { get; set; }
+        public ICollection<Cuidadores> CuidadoresAtendentes { get; set; } = new List<Cuidadores>();
 
         // Preenchido somente quando o usuário for cuidador
         public int? IdosoId { get; set; }
