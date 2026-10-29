@@ -90,6 +90,12 @@ export function CuidadoresClient() {
     return () => controller.abort();
   }, [destino, tentativa]);
 
+  useEffect(() => {
+    const atualizar = () => setTentativa((atual) => atual + 1);
+    window.addEventListener("vinculo-cuidador-atualizado", atualizar);
+    return () => window.removeEventListener("vinculo-cuidador-atualizado", atualizar);
+  }, []);
+
   if (!destino) return <Navigate to="/login" replace />;
   if (destino !== "/HomeClient") return <Navigate to={destino} replace />;
 

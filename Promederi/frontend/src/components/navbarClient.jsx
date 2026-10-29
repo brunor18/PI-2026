@@ -4,6 +4,7 @@ import { BookOpenText, Bot, ClipboardList, HeartPulse, Menu, UserRound, Users, X
 import { BrandLogo } from "./BrandLogo";
 import { Button } from "./ui/button";
 import api from "@/services/api.service";
+import { NotificacoesClient } from "./NotificacoesClient";
 
 const links = [
   { to: "/HomeClient", label: "Visão geral", icon: HeartPulse },
@@ -72,9 +73,12 @@ export function NavBarClient() {
             ))}
           </nav>
         </div>
-        <div className="ml-auto hidden min-w-0 items-center gap-3 sm:flex">
-          <IdentidadeUsuario nome={nomeUsuario} className="max-w-40" />
-          <Button type="button" onClick={sair} className="min-h-11 shrink-0 px-5">Sair</Button>
+        <div className="ml-auto flex min-w-0 items-center gap-3">
+          <NotificacoesClient />
+          <div className="hidden min-w-0 items-center gap-3 sm:flex">
+            <IdentidadeUsuario nome={nomeUsuario} className="max-w-40" />
+            <Button type="button" onClick={sair} className="min-h-11 shrink-0 px-5">Sair</Button>
+          </div>
         </div>
         <Button type="button" variant="ghost" className="size-11 shrink-0 px-0 xl:hidden" onClick={() => setOpen((value) => !value)} aria-label={open ? "Fechar menu" : "Abrir menu"} aria-expanded={open}>
           {open ? <X aria-hidden="true" className="size-6" /> : <Menu aria-hidden="true" className="size-6" />}

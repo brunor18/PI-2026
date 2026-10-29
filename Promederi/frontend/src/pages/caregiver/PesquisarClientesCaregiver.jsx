@@ -8,6 +8,7 @@ import { obterDestinoDaSessao } from "@/lib/session";
 import api from "@/services/api.service";
 import { BotaoContato } from "@/components/BotaoContato";
 import { obterLinkWhatsApp, resumirDescricao } from "@/lib/cuidadores";
+import { PropostaServicoModal } from "@/components/PropostaServicoModal";
 
 function normalizar(valor) {
   return String(valor ?? "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLocaleLowerCase("pt-BR").trim();
@@ -64,7 +65,16 @@ export function PesquisarClientesCaregiver() {
   const [erro, setErro] = useState("");
   const [tentativa, setTentativa] = useState(0);
   const [clienteSelecionado, setClienteSelecionado] = useState(null);
+  const [clienteProposta, setClienteProposta] = useState(null);
+  const [propostasEnviadas, setPropostasEnviadas] = useState({});
+  const [aviso, setAviso] = useState("");
+  const [agora, setAgora] = useState(Date.now);
   const destino = obterDestinoDaSessao();
+
+  useEffect(() => {
+    const timer = window.setInterval(() => setAgora(Date.now()), 1000);
+    return () => window.clearInterval(timer);
+  }, []);
 
   useEffect(() => {
     if (destino !== "/HomeCaregiver") return;
@@ -99,6 +109,7 @@ export function PesquisarClientesCaregiver() {
       <NavBarCaregiver />
       <PageIntro eyebrow="Rede de cuidado" title="Procurar um cliente" text="Busque por nome ou cidade e encontre idosos com ou sem cuidadores vinculados." />
       <main className="mx-auto max-w-7xl px-5 pb-16 lg:px-8">
+        {aviso && <p role="status" className="mb-5 rounded-lg bg-success-soft px-4 py-3 text-sm text-success">{aviso}</p>}
         <section aria-label="Pesquisa de clientes" aria-busy={carregando} className="rounded-lg border border-border bg-card p-5 shadow-soft sm:p-7">
           <label className="flex min-h-12 items-center gap-3 rounded-lg border border-input bg-background px-4 focus-within:ring-2 focus-within:ring-primary">
             <Search aria-hidden="true" className="size-5 shrink-0 text-muted-foreground" />
@@ -128,6 +139,19 @@ export function PesquisarClientesCaregiver() {
                     <div className="mt-5 grid gap-3">
                       <Button type="button" variant="outline" onClick={() => setClienteSelecionado(cliente)} aria-haspopup="dialog" aria-label={`Mais detalhes de ${cliente.nome}`} className="min-h-12 w-full">Mais detalhes</Button>
                       <BotaoContato telefone={cliente.numeroTelefone} />
+                      <Button
+                        type="button"
+                        variant="secondary"
+                        className="min-h-12 w-full whitespace-normal"
+                        aria-haspopup="dialog"
+                        disabled={cliente.atendidoPorVoce || propostasEnviadas[cliente.id] > agora}
+                        onClick={() => { setAviso(""); setClienteProposta(cliente); }}
+                      >
+                        Enviar proposta de serviço
+                      </Button>
+                      {!cliente.atendidoPorVoce && propostasEnviadas[cliente.id] > agora && (
+                        <p className="text-xs text-muted-foreground">Proposta enviada. Aguardando resposta do cliente.</p>
+                      )}
                     </div>
                   </article>
                 ))}
@@ -137,6 +161,17 @@ export function PesquisarClientesCaregiver() {
         </section>
       </main>
       {clienteSelecionado && <DetalhesCliente cliente={clienteSelecionado} aoFechar={() => setClienteSelecionado(null)} />}
+      {clienteProposta && (
+        <PropostaServicoModal
+          cliente={clienteProposta}
+          aoFechar={() => setClienteProposta(null)}
+          aoEnviar={(data) => {
+            setPropostasEnviadas((atuais) => ({ ...atuais, [clienteProposta.id]: new Date(data.expiraEm).getTime() }));
+            setAviso(`Proposta enviada para ${clienteProposta.nome}. O cliente será notificado.`);
+            setClienteProposta(null);
+          }}
+        />
+      )}
     </div>
   );
 }
