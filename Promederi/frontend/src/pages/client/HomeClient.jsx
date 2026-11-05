@@ -57,6 +57,9 @@ function resumoRegistro(categoria, registro) {
 export function HomeClient() {
   const [usuario] = useState(lerUsuario);
   const [registros, setRegistros] = useState({ medicamentos: [], procedimentos: [], campos: [] });
+  const [cuidadores, setCuidadores] = useState([]);
+  const [carregandoCuidadores, setCarregandoCuidadores] = useState(true);
+  const [erroCuidadores, setErroCuidadores] = useState(false);
   const [carregando, setCarregando] = useState(true);
   const [erroListagem, setErroListagem] = useState("");
   const [falhasListagem, setFalhasListagem] = useState({});
@@ -72,6 +75,17 @@ export function HomeClient() {
   useEffect(() => {
     if (!acessoValido) return;
     let ativo = true;
+
+    async function carregarCuidadores() {
+      try {
+        const { data } = await api.get("/api/cuidadores/MeusCuidadores");
+        if (ativo) setCuidadores(Array.isArray(data) ? data : []);
+      } catch {
+        if (ativo) setErroCuidadores(true);
+      } finally {
+        if (ativo) setCarregandoCuidadores(false);
+      }
+    }
 
     async function carregarRegistros() {
       const respostas = await Promise.allSettled(
@@ -102,7 +116,9 @@ export function HomeClient() {
       setCarregando(false);
     }
 
+
     carregarRegistros();
+    carregarCuidadores();
     return () => { ativo = false; };
   }, [acessoValido, usuarioId]);
 
@@ -248,17 +264,41 @@ export function HomeClient() {
               <p className="mt-1 text-sm leading-6 text-muted-foreground">Acompanhe os profissionais que fazem parte da sua rede de cuidado.</p>
             </div>
           </div>
-          <div className="flex flex-col gap-5 rounded-lg border border-border bg-card p-5 shadow-soft sm:flex-row sm:items-center sm:p-6">
-            <img src={lucianaPhoto} alt="" width="816" height="816" className="size-20 shrink-0 rounded-full object-cover" />
-            <div className="min-w-0 flex-1">
-              <p className="text-xs font-semibold uppercase text-success">Em plantão</p>
-              <h3 className="mt-1 font-heading text-xl font-semibold text-primary">Luciana Ribeiro</h3>
-              <p className="mt-1 text-sm text-muted-foreground">Cuidadora sênior • 8 anos de experiência</p>
-            </div>
-            <Button asChild variant="outline" className="min-h-12 w-full shrink-0 sm:w-auto">
-              <Link to="/CuidadoresClient">Ver cuidadores <ArrowRight aria-hidden="true" /></Link>
-            </Button>
-          </div>
+          {carregandoCuidadores ? (
+            <p className="text-sm text-muted-foreground">Carregando cuidadores...</p>
+          ) : erroCuidadores ? (
+            <p role="alert" className="rounded-lg bg-emergency-soft px-4 py-5 text-sm text-emergency">
+              Não foi possível carregar os cuidadores.
+            </p>
+          ) : cuidadores.length === 0 ? (
+            <p className="rounded-lg bg-background px-4 py-5 text-sm leading-6 text-muted-foreground">
+              Você ainda não tem cuidadores vinculados.
+            </p>
+          ) : (
+            <>
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {cuidadores.map((c) => (
+                  <article
+                    key={c.id}
+                    className="flex min-w-0 items-start gap-4 rounded-lg border border-border bg-card p-5 shadow-soft"
+                  >
+                    <span className="grid size-14 shrink-0 place-items-center rounded-full bg-muted text-lg font-semibold text-primary">
+                      {c.nome?.trim().charAt(0).toUpperCase()}
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      <h3 className="break-words font-heading text-lg font-semibold text-primary">{c.nome}</h3>
+                      {c.idade != null && <p className="mt-1 text-sm text-muted-foreground">{c.idade} anos</p>}
+                      {c.numeroTelefone && <p className="mt-1 break-words text-sm text-foreground">{c.numeroTelefone}</p>}
+                      {c.descricao && <p className="mt-2 line-clamp-2 break-words text-xs leading-5 text-muted-foreground">{c.descricao}</p>}
+                    </div>
+                  </article>
+                ))}
+              </div>
+              <Button asChild variant="outline" className="mt-5 min-h-12 w-full sm:w-auto">
+                <Link to="/CuidadoresClient">Ver cuidadores <ArrowRight aria-hidden="true" /></Link>
+              </Button>
+            </>
+          )}
         </section>
 
         <aside className="mt-8 rounded-lg bg-primary p-5 text-primary-foreground shadow-brand sm:p-7">

@@ -39,4 +39,32 @@ public class CuidadoresController(AppDbContext context) : UsuarioControllerBase
 
         return Ok(cuidadores);
     }
+
+
+    [HttpGet("MeusCuidadores")]
+    public async Task<IActionResult> ListarMeus(CancellationToken cancellationToken)
+    {
+        if (User.FindFirst("token_type")?.Value != "access"
+            || !int.TryParse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value, out var usuarioId))
+            return Forbid();
+
+        var cuidadores = await context.cuidadores.AsNoTracking()
+            .Where(c => c.Usuario.TipoUsuario == TipoUsuario.Cuidador
+                     && c.Idosos.Any(i => i.Id == usuarioId))
+            .OrderBy(c => c.Nome).ThenBy(c => c.Id)
+            .Select(c => new
+            {
+                id = c.Id,
+                usuarioId = c.UsuarioId,
+                numeroTelefone = c.Usuario.numeroTelefone,
+                nome = c.Nome,
+                idade = c.Idade,
+                descricao = c.Descricao,
+            })
+            .ToListAsync(cancellationToken);
+
+        return Ok(cuidadores);
+    }
+
+
 }

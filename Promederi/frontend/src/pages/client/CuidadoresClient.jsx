@@ -104,7 +104,7 @@ export function CuidadoresClient() {
   return (
     <div className="min-h-screen bg-background">
       <NavBarClient />
-      <PageIntro eyebrow="Rede de cuidado" title="Meus Cuidadores" text="Conheça os perfis dos cuidadores cadastrados, sua experiência e os cuidados que oferecem." />
+      <PageIntro eyebrow="Rede de cuidado" title="Cuidadores Disponíveis" text="Conheça os perfis dos cuidadores cadastrados, sua experiência e os cuidados que oferecem." />
       <main className="mx-auto max-w-7xl px-5 pb-16 lg:px-8">
         <section aria-label="Lista de cuidadores" aria-busy={carregando} className="rounded-lg border border-border bg-card p-5 shadow-soft sm:p-7">
           <label className="flex min-h-12 items-center gap-3 rounded-lg border border-input bg-background px-4 focus-within:ring-2 focus-within:ring-primary">
