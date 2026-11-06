@@ -10,7 +10,7 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.ico', 'favicon.svg', 'apple-touch-icon.png'],
+      includeAssets: ['favicon.ico', 'apple-touch-icon.png'],
       manifest: {
         name: 'Promederi',
         short_name: 'Promederi',
@@ -32,6 +32,7 @@ export default defineConfig({
         // não deixa o fallback do React Router capturar chamadas da API
         navigateFallbackDenylist: [/^\/api\//],
         globPatterns: ['**/*.{js,css,html,ico,png,svg,jpg,woff2}'],
+        globIgnores: ['**/favicon.svg'],
         runtimeCaching: [
           {
             urlPattern: ({ url, request }) =>

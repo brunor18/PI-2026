@@ -11,5 +11,9 @@ public class Cuidadores
     public string Numero { get; set; } = string.Empty;
     public string Endereco { get; set; } = string.Empty;
     public string Descricao { get; set; } = string.Empty;
+    public string Funcao { get; set; } = string.Empty;
+    public string Experiencia { get; set; } = string.Empty;
+    public string AreaAtendimento { get; set; } = string.Empty;
+    public string Especialidades { get; set; } = string.Empty;
     public ICollection<Usuario> Idosos { get; set; } = new List<Usuario>();
 }

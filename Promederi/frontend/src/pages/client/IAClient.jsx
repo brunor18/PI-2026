@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Bot, ClipboardList, Send, ShieldAlert, Stethoscope, UserRound } from "lucide-react";
 import { NavBarClient } from "@/components/NavBarClient";
 import { Button } from "@/components/ui/button";
@@ -12,6 +12,7 @@ const quickReports = [
 ];
 
 export function IAClient() {
+  const [perfil, setPerfil] = useState(null);
   const [message, setMessage] = useState("");
   const [chatHistory, setChatHistory] = useState([
     {
@@ -20,6 +21,9 @@ export function IAClient() {
     }
   ]);
   const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    api.get("/api/clientes/me").then(({ data }) => setPerfil(data)).catch(() => setPerfil(null));
+  }, []);
 
   const submit = async (event) => {
     event.preventDefault();
@@ -83,8 +87,8 @@ export function IAClient() {
             <div className="flex items-center gap-3 rounded-lg bg-background px-4 py-3">
               <UserRound className="size-5 text-emergency" />
               <div>
-                <p className="text-sm font-semibold text-primary">Helena Soares</p>
-                <p className="text-xs text-muted-foreground">84 anos • histórico ativo</p>
+                <p className="text-sm font-semibold text-primary">{perfil?.nome || "Meu perfil"}</p>
+                <p className="text-xs text-muted-foreground">{perfil?.idade ? `${perfil.idade} anos` : "Perfil"} • histórico ativo</p>
               </div>
             </div>
           </div>
@@ -147,7 +151,7 @@ export function IAClient() {
               <textarea
                 value={message}
                 onChange={(event) => setMessage(event.target.value)}
-                placeholder="Ex.: Helena sentiu tontura ao se levantar por volta das 10h..."
+                placeholder="Ex.: senti tontura ao me levantar por volta das 10h..."
                 className="mt-2 min-h-32 w-full resize-none rounded-lg border border-input bg-background p-4 text-sm outline-hidden focus:border-primary focus:ring-3 focus:ring-primary/15"
               />
             </label>

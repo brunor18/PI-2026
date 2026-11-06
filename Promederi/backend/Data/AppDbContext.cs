@@ -37,6 +37,10 @@ namespace backend.Data
                 entity.Property(c => c.Numero).HasMaxLength(20).IsRequired();
                 entity.Property(c => c.Endereco).HasMaxLength(500).IsRequired();
                 entity.Property(c => c.Descricao).HasMaxLength(2000).IsRequired();
+                entity.Property(c => c.Funcao).HasMaxLength(200).IsRequired();
+                entity.Property(c => c.Experiencia).HasMaxLength(200).IsRequired();
+                entity.Property(c => c.AreaAtendimento).HasMaxLength(300).IsRequired();
+                entity.Property(c => c.Especialidades).HasMaxLength(1000).IsRequired();
                 entity.HasOne(c => c.Usuario).WithOne(u => u.PerfilCuidador)
                     .HasForeignKey<Cuidadores>(c => c.UsuarioId)
                     .OnDelete(DeleteBehavior.Cascade);
@@ -82,6 +86,15 @@ namespace backend.Data
             .WithMany(u => u.Cuidadores)
             .HasForeignKey(u => u.IdosoId)
             .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Anotacao>(entity =>
+            {
+            entity.ToTable("Anotacoes");
+            entity.Property(a => a.Texto).HasMaxLength(500).IsRequired();
+            entity.HasOne(a => a.Usuario).WithMany().HasForeignKey(a => a.UsuarioId).OnDelete(DeleteBehavior.Cascade);
+            entity.HasOne(a => a.AutorUsuario).WithMany().HasForeignKey(a => a.AutorUsuarioId).OnDelete(DeleteBehavior.Restrict);
+            entity.HasIndex(a => new { a.UsuarioId, a.CreatedAt });
+            });
         }
 
 
@@ -92,7 +105,7 @@ namespace backend.Data
         public DbSet<CampoClinico> camposClinicos { get; set; }
         public DbSet<ProcedimentoCirurgico> procedimentosCirurgicos { get; set; }
         public DbSet<Medicamento> medicamentos { get; set; } // transforma a classe Medicamentos em uma tabela do banco de dados
+        public DbSet<Anotacao> anotacoes { get; set; }
 
     }
 }
-
