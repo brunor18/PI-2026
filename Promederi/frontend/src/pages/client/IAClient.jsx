@@ -6,9 +6,9 @@ import { Button } from "@/components/ui/button";
 import { PageIntro } from "./CuidadoresClient";
 
 const quickReports = [
-  "Tontura ao levantar",
-  "Pouca ingestão de água",
-  "Dor no joelho após caminhar",
+  "Tontura",
+  "Náusea",
+  "Dor de cabeça",
 ];
 
 const historyItems = [
@@ -66,7 +66,7 @@ export function IAClient() {
               , React.createElement('span', { className: "grid size-10 shrink-0 place-items-center rounded-lg bg-muted text-primary"      , __self: this, __source: {fileName: _jsxFileName, lineNumber: 65}}
                 , React.createElement(Bot, { className: "size-5", __self: this, __source: {fileName: _jsxFileName, lineNumber: 66}} )
               )
-              , React.createElement('p', { className: "rounded-lg bg-background p-4 text-sm leading-6 text-foreground"     , __self: this, __source: {fileName: _jsxFileName, lineNumber: 68}}, "Olá, João. Conte o que você percebeu hoje e informe horário, intensidade e se já aconteceu antes."
+              , React.createElement('p', { className: "rounded-lg bg-background p-4 text-sm leading-6 text-foreground"     , __self: this, __source: {fileName: _jsxFileName, lineNumber: 68}}, "Olá! Conte o que você percebeu hoje e informe horário, intensidade e se já aconteceu antes."
 
               )
             )
@@ -123,25 +123,12 @@ export function IAClient() {
             )
           )
 
-          , React.createElement('section', { className: "rounded-lg border border-border bg-card p-6 shadow-soft"     , __self: this, __source: {fileName: _jsxFileName, lineNumber: 125}}
-            , React.createElement('p', { className: "flex items-center gap-2 text-sm font-semibold text-primary"     , __self: this, __source: {fileName: _jsxFileName, lineNumber: 126}}
-              , React.createElement(History, { className: "size-4 text-emergency" , __self: this, __source: {fileName: _jsxFileName, lineNumber: 127}} ), " Histórico considerado"
-            )
-            , React.createElement('div', { className: "mt-4 space-y-3" , __self: this, __source: {fileName: _jsxFileName, lineNumber: 129}}
-              , historyItems.map((item) => (
-                React.createElement('p', { key: item, className: "rounded-lg bg-background px-4 py-3 text-sm leading-6 text-muted-foreground"      , __self: this, __source: {fileName: _jsxFileName, lineNumber: 131}}
-                  , item
-                )
-              ))
-            )
-          )
-
           , React.createElement('section', { className: "rounded-lg border border-border bg-card p-6 shadow-soft"     , __self: this, __source: {fileName: _jsxFileName, lineNumber: 138}}
             , React.createElement('p', { className: "flex items-center gap-2 text-sm font-semibold text-primary"     , __self: this, __source: {fileName: _jsxFileName, lineNumber: 139}}
-              , React.createElement(ClipboardList, { className: "size-4 text-emergency" , __self: this, __source: {fileName: _jsxFileName, lineNumber: 140}} ), " O que informar"
+              , React.createElement(ClipboardList, { className: "size-4 text-emergency" , __self: this, __source: {fileName: _jsxFileName, lineNumber: 140}} ), " Como utilizar o relato de sintomas.\n Informe:"
             )
             , React.createElement('ul', { className: "mt-4 space-y-3 text-sm leading-6 text-muted-foreground"    , __self: this, __source: {fileName: _jsxFileName, lineNumber: 142}}
-              , React.createElement('li', {__self: this, __source: {fileName: _jsxFileName, lineNumber: 143}}, "Horário em que começou."   )
+              , React.createElement('li', {__self: this, __source: {fileName: _jsxFileName, lineNumber: 143}}, "O que você sente ou sentiu."   )
               , React.createElement('li', {__self: this, __source: {fileName: _jsxFileName, lineNumber: 144}}, "Intensidade e duração."  )
               , React.createElement('li', {__self: this, __source: {fileName: _jsxFileName, lineNumber: 145}}, "Medicamentos, alimentação e atividades recentes."    )
             )

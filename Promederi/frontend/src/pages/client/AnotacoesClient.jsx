@@ -1,114 +1,191 @@
-import React from "react";
-const _jsxFileName = ""; function _nullishCoalesce(lhs, rhsFn) { if (lhs != null) { return lhs; } else { return rhsFn(); } } function _optionalChain(ops) { let lastAccessLHS = undefined; let value = ops[0]; let i = 1; while (i < ops.length) { const op = ops[i]; const fn = ops[i + 1]; i += 2; if ((op === 'optionalAccess' || op === 'optionalCall') && value == null) { return undefined; } if (op === 'access' || op === 'optionalAccess') { lastAccessLHS = value; value = fn(value); } else if (op === 'call' || op === 'optionalCall') { value = fn((...args) => value.call(lastAccessLHS, ...args)); lastAccessLHS = undefined; } } return value; }import { useState } from "react";
-import { ChevronDown, Plus, Search } from "lucide-react";
+import { useState } from "react";
+import { ChevronDown, Edit3, Plus, Search } from "lucide-react";
 import { NavBarClient } from "@/components/NavBarClient";
+import { Modal } from "@/components/Modal";
 import { Button } from "@/components/ui/button";
 import { PageIntro } from "./CuidadoresClient";
 
 const initialGroups = [
   {
-    day: "Hoje, 22 de setembro",
-    summary: "2 anotações",
+    day: "22 de setembro",
     notes: [
-      { time: "10:20", text: "Helena dormiu bem e acordou disposta.", author: "Luciana Ribeiro" },
-      { time: "08:45", text: "Leve desconforto no joelho após a caminhada.", author: "Luciana Ribeiro" },
+      { id: "1020", time: "10:20", text: "Helena dormiu bem e acordou disposta.", author: "Luciana Ribeiro" },
+      { id: "0845", time: "08:45", text: "Leve desconforto no joelho após a caminhada.", author: "Luciana Ribeiro" },
     ],
   },
   {
-    day: "Ontem, 21 de setembro",
-    summary: "3 anotações",
+    day: "21 de setembro",
     notes: [
-      { time: "18:10", text: "Jantou sopa e aceitou a medicação da noite.", author: "Marcos Soares" },
-      { time: "14:30", text: "Fez repouso após a fisioterapia.", author: "Luciana Ribeiro" },
-      { time: "09:05", text: "Pressão aferida dentro da normalidade.", author: "Luciana Ribeiro" },
+      { id: "810", time: "18:10", text: "Jantou sopa e aceitou a medicação da noite.", author: "Marcos Soares" },
+      { id: "430", time: "14:30", text: "Fez repouso após a fisioterapia.", author: "Luciana Ribeiro" },
+      { id: "0905", time: "09:05", text: "Pressão aferida dentro da normalidade.", author: "Luciana Ribeiro" },
     ],
   },
   {
     day: "20 de setembro",
-    summary: "1 anotação",
     notes: [
-      { time: "12:15", text: "Almoço completo e boa hidratação durante a manhã.", author: "Marcos Soares" },
+      { id: "1215", time: "12:15", text: "Almoço completo e boa hidratação durante a manhã.", author: "Marcos Soares" },
     ],
   },
 ];
 
-const defaultDay = _nullishCoalesce(_optionalChain([initialGroups, 'access', _ => _[0], 'optionalAccess', _2 => _2.day]), () => ( ""));
+const defaultDay = initialGroups[0]?.day ?? "";
+
+function summaryFor(notes) {
+  return `${notes.length} ${notes.length === 1 ? "anotação" : "anotações"}`;
+}
 
 export function AnotacoesClient() {
   const [groups, setGroups] = useState(initialGroups);
   const [openDay, setOpenDay] = useState(defaultDay);
   const [search, setSearch] = useState("");
+  const [modal, setModal] = useState(null);
+  const [draft, setDraft] = useState("");
 
-  const addNote = () => {
-    setGroups((current) => current.map((group, index) => index === 0 ? {
-      ...group,
-      summary: `${group.notes.length + 1} anotações`,
-      notes: [{ time: "Agora", text: "Nova observação registrada para acompanhamento.", author: "João Soares" }, ...group.notes],
-    } : group));
+  const openNewNote = () => {
+    setDraft("");
+    setModal({ groupDay: defaultDay, noteId: null });
+  };
+
+  const openEditNote = (groupDay, note) => {
+    setDraft(note.text);
+    setModal({ groupDay, noteId: note.id });
+  };
+
+  const closeModal = () => setModal(null);
+
+  const saveNote = (event) => {
+    event.preventDefault();
+    const text = draft.trim();
+    if (!text) return;
+
+    setGroups((current) => current.map((group) => {
+      if (group.day !== modal.groupDay) return group;
+
+      if (modal.noteId) {
+        return {
+          ...group,
+          notes: group.notes.map((note) => note.id === modal.noteId ? { ...note, text } : note),
+        };
+      }
+
+      return {
+        ...group,
+        notes: [
+          { id: `note-${Date.now()}`, time: "Agora", text, author: "João Soares" },
+          ...group.notes,
+        ],
+      };
+    }));
     setOpenDay(defaultDay);
+    closeModal();
   };
 
   const normalizedSearch = search.trim().toLowerCase();
   const visibleGroups = groups.map((group) => ({
     ...group,
-    notes: normalizedSearch ? group.notes.filter((note) => `${group.day} ${note.text} ${note.author}`.toLowerCase().includes(normalizedSearch)) : group.notes,
+    summary: summaryFor(group.notes),
+    notes: normalizedSearch
+      ? group.notes.filter((note) => `${group.day} ${note.text} ${note.author}`.toLowerCase().includes(normalizedSearch))
+      : group.notes,
   })).filter((group) => group.notes.length > 0);
 
-  return (
-    React.createElement('div', { className: "min-h-screen bg-background" , __self: this, __source: {fileName: _jsxFileName, lineNumber: 57}}
-      , React.createElement(NavBarClient, {__self: this, __source: {fileName: _jsxFileName, lineNumber: 58}} )
-      , React.createElement(PageIntro, { eyebrow: "Diário de cuidados"  , title: "Anotações", text: "Registros simples para manter a família e os cuidadores sempre alinhados."          , __self: this, __source: {fileName: _jsxFileName, lineNumber: 59}} )
-      , React.createElement('main', { className: "mx-auto max-w-5xl px-5 pb-16 lg:px-8"    , __self: this, __source: {fileName: _jsxFileName, lineNumber: 60}}
-        , React.createElement('div', { className: "grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto]"  , __self: this, __source: {fileName: _jsxFileName, lineNumber: 61}}
-          , React.createElement('label', { className: "flex min-h-12 min-w-0 items-center gap-3 rounded-lg border border-border bg-card px-4"         , __self: this, __source: {fileName: _jsxFileName, lineNumber: 62}}
-            , React.createElement(Search, { className: "size-5 shrink-0 text-muted-foreground"  , __self: this, __source: {fileName: _jsxFileName, lineNumber: 63}} )
-            , React.createElement('input', {
-              value: search,
-              onChange: (event) => setSearch(event.target.value),
-              'aria-label': "Buscar anotações" ,
-              placeholder: "Buscar por palavra, data ou responsável"     ,
-              className: "w-full min-w-0 bg-transparent text-sm outline-hidden placeholder:text-muted-foreground"     , __self: this, __source: {fileName: _jsxFileName, lineNumber: 64}}
-            )
-          )
-          , React.createElement(Button, { onClick: addNote, className: "min-h-12", __self: this, __source: {fileName: _jsxFileName, lineNumber: 72}}, React.createElement(Plus, { className: "size-5", __self: this, __source: {fileName: _jsxFileName, lineNumber: 72}} ), " Nova anotação"  )
-        )
+  const editing = modal?.noteId != null;
 
-        , React.createElement('div', { className: "mt-7 space-y-4" , __self: this, __source: {fileName: _jsxFileName, lineNumber: 75}}
-          , visibleGroups.map((group) => {
+  return (
+    <div className="min-h-screen bg-background">
+      <NavBarClient />
+      <PageIntro eyebrow="Diário de cuidados" title="Anotações" text="Registros simples para manter a família e os cuidadores sempre alinhados." />
+      <main className="mx-auto max-w-5xl px-5 pb-16 lg:px-8">
+        <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto]">
+          <label className="flex min-h-12 min-w-0 items-center gap-3 rounded-lg border border-border bg-card px-4">
+            <Search className="size-5 shrink-0 text-muted-foreground" />
+            <input
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+              aria-label="Buscar anotações"
+              placeholder="Buscar por palavra, data ou responsável"
+              className="w-full min-w-0 bg-transparent text-sm outline-hidden placeholder:text-muted-foreground"
+            />
+          </label>
+          <Button onClick={openNewNote} className="min-h-12">
+            <Plus className="size-5" /> Nova anotação
+          </Button>
+        </div>
+
+        <div className="mt-7 space-y-4">
+          {visibleGroups.map((group) => {
             const isOpen = openDay === group.day;
 
             return (
-              React.createElement('section', { key: group.day, className: "rounded-lg border border-border bg-card shadow-soft"    , __self: this, __source: {fileName: _jsxFileName, lineNumber: 80}}
-                , React.createElement(Button, {
-                  type: "button",
-                  variant: "ghost",
-                  onClick: () => setOpenDay(isOpen ? "" : group.day),
-                  className: "grid h-auto w-full grid-cols-[minmax(0,1fr)_auto] gap-3 rounded-lg p-5 text-left hover:bg-accent"        ,
-                  'aria-expanded': isOpen, __self: this, __source: {fileName: _jsxFileName, lineNumber: 81}}
+              <section key={group.day} className="rounded-lg border border-border bg-card shadow-soft">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  onClick={() => setOpenDay(isOpen ? "" : group.day)}
+                  className="grid h-auto w-full grid-cols-[minmax(0,1fr)_auto] gap-3 rounded-lg p-5 text-left hover:bg-accent"
+                  aria-expanded={isOpen}
+                >
+                  <span className="min-w-0">
+                    <span className="block font-heading text-2xl font-semibold text-primary">{group.day}</span>
+                    <span className="mt-1 block text-sm text-muted-foreground">{group.summary}</span>
+                  </span>
+                  <ChevronDown className={isOpen ? "size-5 rotate-180 text-emergency transition-transform" : "size-5 text-emergency transition-transform"} />
+                </Button>
 
-                  , React.createElement('span', { className: "min-w-0", __self: this, __source: {fileName: _jsxFileName, lineNumber: 88}}
-                    , React.createElement('span', { className: "block font-heading text-2xl font-semibold text-primary"    , __self: this, __source: {fileName: _jsxFileName, lineNumber: 89}}, group.day)
-                    , React.createElement('span', { className: "mt-1 block text-sm text-muted-foreground"   , __self: this, __source: {fileName: _jsxFileName, lineNumber: 90}}, group.summary)
-                  )
-                  , React.createElement(ChevronDown, { className: isOpen ? "size-5 rotate-180 text-emergency transition-transform" : "size-5 text-emergency transition-transform", __self: this, __source: {fileName: _jsxFileName, lineNumber: 92}} )
-                )
-
-                , isOpen && (
-                  React.createElement('div', { className: "space-y-4 border-t border-border p-5 pt-4"    , __self: this, __source: {fileName: _jsxFileName, lineNumber: 96}}
-                    , group.notes.map((note) => (
-                      React.createElement('article', { key: `${group.day}-${note.time}-${note.text}`, className: "grid gap-2 rounded-lg bg-background p-4"    , __self: this, __source: {fileName: _jsxFileName, lineNumber: 98}}
-                        , React.createElement('p', { className: "text-xs font-semibold text-emergency"  , __self: this, __source: {fileName: _jsxFileName, lineNumber: 99}}, note.time)
-                        , React.createElement('p', { className: "leading-7 text-foreground" , __self: this, __source: {fileName: _jsxFileName, lineNumber: 100}}, note.text)
-                        , React.createElement('p', { className: "text-sm text-muted-foreground" , __self: this, __source: {fileName: _jsxFileName, lineNumber: 101}}, "Registrado por "  , note.author)
-                      )
-                    ))
-                  )
-                )
-              )
+                {isOpen && (
+                  <div className="space-y-4 border-t border-border p-5 pt-4">
+                    {group.notes.map((note) => (
+                      <article key={note.id} className="grid gap-2 rounded-lg bg-background p-4">
+                        <div className="flex items-start justify-between gap-4">
+                          <p className="text-xs font-semibold text-emergency">{note.time}</p>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => openEditNote(group.day, note)}
+                            aria-label={`Editar anotação das ${note.time}`}
+                            className="min-h-9 gap-2 px-2 text-primary"
+                          >
+                            <Edit3 className="size-4" /> Editar
+                          </Button>
+                        </div>
+                        <p className="leading-7 text-foreground">{note.text}</p>
+                        <p className="text-sm text-muted-foreground">Registrado por {note.author}</p>
+                      </article>
+                    ))}
+                  </div>
+                )}
+              </section>
             );
-          })
-        )
-      )
-    )
+          })}
+        </div>
+      </main>
+
+      {modal && (
+        <Modal titulo={editing ? "Editar anotação" : "Nova anotação"} aoFechar={closeModal}>
+          <form onSubmit={saveNote} className="space-y-5">
+            <label htmlFor="anotacao-texto" className="block text-sm font-medium text-foreground">
+              Texto da anotação
+              <textarea
+                id="anotacao-texto"
+                value={draft}
+                onChange={(event) => setDraft(event.target.value)}
+                placeholder="Descreva como foi o atendimento ou o estado do paciente."
+                maxLength={500}
+                required
+                autoFocus
+                className="mt-2 min-h-32 w-full resize-y rounded-lg border border-input bg-background p-4 text-sm outline-hidden focus:border-primary focus:ring-3 focus:ring-primary/15"
+              />
+              <span className="mt-1 block text-right text-xs text-muted-foreground">{draft.length}/500</span>
+            </label>
+            <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+              <Button type="button" variant="outline" onClick={closeModal}>Cancelar</Button>
+              <Button type="submit">{editing ? "Salvar alterações" : "Enviar anotação"}</Button>
+            </div>
+          </form>
+        </Modal>
+      )}
+    </div>
   );
 }
