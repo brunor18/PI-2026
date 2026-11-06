@@ -1,4 +1,5 @@
 using backend.Services;
+using Google.GenAI;
 using Microsoft.AspNetCore.Mvc;
 
 namespace backend.Controllers
@@ -20,8 +21,18 @@ namespace backend.Controllers
             if (string.IsNullOrWhiteSpace(request.Mensagem))
                 return BadRequest("A mensagem não pode estar vazia.");
 
-            var resposta = await _geminiService.ObterRespostaAsync(request.Mensagem);
-            return Ok(new { resposta });
+            try
+            {
+                var resposta = await _geminiService.ObterRespostaAsync(request.Mensagem);
+                return Ok(new { resposta });
+            }
+            catch (ServerError)
+            {
+                return StatusCode(StatusCodes.Status503ServiceUnavailable, new
+                {
+                    mensagem = "O assistente está temporariamente ocupado. Tente enviar o relato novamente em alguns instantes.",
+                });
+            }
         }
     }
 

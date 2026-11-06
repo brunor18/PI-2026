@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Bot, ClipboardList, Send, ShieldAlert, Stethoscope, UserRound } from "lucide-react";
 import { NavBarClient } from "@/components/NavBarClient";
 import { Button } from "@/components/ui/button";
+import api from "@/services/api.service";
 import { PageIntro } from "./CuidadoresClient";
 
 const quickReports = [
@@ -32,20 +33,8 @@ export function IAClient() {
     setLoading(true);
 
     try {
-      // Ajuste a URL base do backend se necessário (ex: porta 5000 ou 5001)
-      const response = await fetch("http://localhost:5000/api/chat/mensagem", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ mensagem: userMessage }),
-      });
+      const { data } = await api.post("/api/chat/mensagem", { mensagem: userMessage });
 
-      if (!response.ok) {
-        throw new Error("Erro na comunicação com o servidor.");
-      }
-
-      const data = await response.json();
-
-      // Adiciona a resposta real gerada pelo Gemini
       setChatHistory((prev) => [
         ...prev,
         { autor: "bot", texto: data.resposta }
@@ -54,7 +43,12 @@ export function IAClient() {
       console.error("Erro ao enviar mensagem:", error);
       setChatHistory((prev) => [
         ...prev,
-        { autor: "bot", texto: "Desculpe, ocorreu um erro ao conectar com o assistente de saúde. Tente novamente mais tarde." }
+        {
+          autor: "bot",
+          texto: error.response?.data?.mensagem ||
+            error.response?.data ||
+            "Desculpe, ocorreu um erro ao conectar com o assistente de saúde. Tente novamente mais tarde.",
+        }
       ]);
     } finally {
       setLoading(false);
