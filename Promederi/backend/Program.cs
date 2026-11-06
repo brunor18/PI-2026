@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddSingleton<GeminiService>();
 builder.Services.AddControllers();
 builder.Services.AddMemoryCache(options => options.ExpirationScanFrequency = TimeSpan.FromMinutes(1));
 builder.Services.AddSingleton(TimeProvider.System);
